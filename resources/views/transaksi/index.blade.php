@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('transaksi.layout')
 
 @section('title')
     Dashboard
@@ -63,7 +63,7 @@
                     <div class="col-xxl-4 col-md-4">
                         <div class="card info-card sales-card">
 
-                            {{-- <div class="filter">
+                            <div class="filter">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i
                                         class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -71,14 +71,13 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" href="/kelolabank">Data Bank</a></li>
+
                                 </ul>
-                            </div> --}}
+                            </div>
 
                             <div class="card-body">
-                                <a href="/kelolabank">
+                                <a href="/transaksi/listtransaksipln">
                                     <h5 class="card-title">Bank <span>| Mitra </span></h5>
                                 </a>
 
@@ -100,7 +99,7 @@
                     <div class="col-xxl-4 col-md-4">
                         <div class="card info-card sales-card">
 
-                            {{-- <div class="filter">
+                            <div class="filter">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i
                                         class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -108,11 +107,9 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" href="/kelolabiller">Data Biller</a></li>
                                 </ul>
-                            </div> --}}
+                            </div>
 
                             <div class="card-body">
                                 <a href="/transaksi/listtransaksinonpln">
@@ -144,8 +141,74 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Transaksi Hari Ini</h5>
-                        <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
+                        {{-- <h5 class="card-title">Transaksi Hari Ini</h5> --}}
+                        <div class="card-body">
+                            <h5 class="card-title">Reports {{ date('F') }} <span>/bulan</span></h5>
+
+                            <!-- Line Chart -->
+                            <div id="reportsChart"></div>
+
+                            <script>
+                                var tanggal = <?php echo $tanggal; ?>;
+                                var pln = <?php echo $pln; ?>;
+                                var non_pln = <?php echo $non_pln; ?>;
+
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#reportsChart"), {
+                                        series: [{
+                                            name: 'PLN',
+                                            data: pln,
+                                        }, {
+                                            name: 'Non PLN',
+                                            data: non_pln
+                                        }],
+                                        chart: {
+                                            height: 350,
+
+                                            type: 'area',
+                                            toolbar: {
+                                                show: false
+                                            },
+                                        },
+                                        markers: {
+                                            size: 4
+                                        },
+                                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                                        fill: {
+                                            type: "gradient",
+                                            gradient: {
+                                                shadeIntensity: 1,
+                                                opacityFrom: 0.3,
+                                                opacityTo: 0.4,
+                                                stops: [0, 90, 100]
+                                            }
+                                        },
+                                        dataLabels: {
+                                            enabled: false
+                                        },
+                                        stroke: {
+                                            curve: 'smooth',
+                                            width: 2
+                                        },
+                                        xaxis: {
+
+                                            categories: tanggal
+                                        },
+                                        tooltip: {
+                                            x: {
+                                                format: 'dd/MM/yy HH:mm'
+                                            },
+                                        }
+                                    }).render();
+                                });
+                            </script>
+                            <!-- End Line Chart -->
+
+                        </div>
+
+                    </div>
+                </div><!-- End Reports -->
+                {{-- <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
                                     <th width="5%"> No</th>
@@ -178,10 +241,10 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                    </div>
-                </div>
+                        </table> --}}
             </div>
+        </div>
+        </div>
         </div>
     </section>
 @endsection

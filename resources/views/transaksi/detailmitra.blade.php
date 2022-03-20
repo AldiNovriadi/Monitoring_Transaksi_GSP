@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('transaksi.layout')
 
 @section('title')
     Transaksi {{ $bank->nama_bank }}
@@ -23,7 +23,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Transaksi {{ $bank->nama_bank }}</h5>
-                        <p><a href="/file-export"> <button id="addRow" type="submit" class="btn btn-primary">
+
+                        <p><a href="/file-export/{{ $bank->kode_bank }}"> <button id="addRow" type="submit"
+                                    class="btn btn-primary">
                                     <i class="ri-file-excel-2-fill"> </i> Export Laporan
                                 </button></a> </p>
                         <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMitra;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -28,9 +31,18 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             toast('Anda Berhasil Login', 'success');
-            return redirect()->intended('/transaksi');
+            if (auth()->user()->role == 'Admin') {
+                return redirect()->intended('/transaksi');
+            } else if (auth()->user()->role == 'Bank') {
+                return redirect()->intended('/bank');
+            } else if (auth()->user()->role == 'Mitra') {
+                return redirect()->intended('/mitra');
+            } else if (auth()->user()->role == 'Accounting') {
+                return redirect()->intended('/accounting');
+            }
         }
 
+        toast('Email atau password salah', 'success');
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
@@ -47,6 +59,36 @@ class LoginController extends Controller
         return redirect('/login');
     }
 
+    public function register()
+    {
+        // if (Session::get('roll') == 2) {
+        //     return redirect('home');
+        // }elseif(Session::get('roll') == 1){
+        //     return redirect('/dashboard');
+        // }else
+        //     return view('regis');
+        // }
+        return view('login.create');
+    }
+
+    public function actionregis(Request $request)
+    {
+        $validated = $request->validate([
+            'fullname' => 'required|max:255|exists:Person,name',
+            'email' => 'required|email:dns|exists:Person,email',
+            'password' => 'required|min:8',
+            'cpassword' => 'required|min:8'
+        ]);
+        $person_id = DataMitra::where('email', $request->email)->select('id')->first();
+        $data = new User([
+            'person_id' => $person_id->id,
+            'email' => $request->get('email'),
+            'password' => hash::make($request->get('password'))
+        ]);
+        $data->save();
+        return back()->with('/login', 'Register Succes! You can LogIn Now');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -54,7 +96,7 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return view('login.create');
+        //
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('mitra.layout')
+@extends('accounting.layout')
 
 @section('title')
     Dashboard
@@ -49,7 +49,7 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class=" ps-3">
-                                        <h6> 10</h6>
+                                        <h6>{{ $transactiontoday }}</h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
                                     </div>
                                 </div>
@@ -85,10 +85,8 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class="ps-3">
-                                        {{-- <h6>{{ $bankmonth->transaction->count() }}</h6> --}}
-                                        <h6> 99</h6>
+                                        <h6>{{ $transactionmount }}</h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
-
                                     </div>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-@extends('mitra.layout')
+@extends('bank.layout')
 
 @section('title')
     Dashboard

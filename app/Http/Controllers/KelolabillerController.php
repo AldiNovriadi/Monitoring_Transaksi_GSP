@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataMitra;
+use App\Models\Billers;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
 
-
-class MitraController extends Controller
+class KelolabillerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +14,8 @@ class MitraController extends Controller
      */
     public function index()
     {
-        $mitra = DataMitra::all();
-        return view('mitra.index', ['mitra' => $mitra]);
+        $biller = Billers::all();
+        return view('kelolabiller.index', ['biller' => $biller]);
     }
 
     /**
@@ -27,7 +25,7 @@ class MitraController extends Controller
      */
     public function create()
     {
-        return view('mitra.create');
+        return view('kelolabiller.create');
     }
 
     /**
@@ -39,15 +37,13 @@ class MitraController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            'status' => 'required'
+            'kode_biller' => 'required',
+            'nama_biller' => 'required',
         ]);
 
-        DataMitra::create($request->all());
-        toast('Akun berhasil dibuat', 'success');
-        return redirect('/mitra');
+        Billers::create($request->all());
+        toast('Data biller berhasil dibuat', 'success');
+        return redirect('/kelolabiller');
     }
 
     /**
@@ -69,8 +65,8 @@ class MitraController extends Controller
      */
     public function edit($id)
     {
-        $mitra = DataMitra::find($id);
-        return view('mitra.edit', compact('mitra'));
+        $biller = Billers::find($id);
+        return view('kelolabiller.edit', compact('biller'));
     }
 
     /**
@@ -80,17 +76,16 @@ class MitraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DataMitra $mitra)
+    public function update(Request $request, Billers $biller, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            'status' => 'required'
-        ]);
+        $biller = Billers::find($id);
+        $biller->kode_biller = $request->kode_biller;
+        $biller->nama_biller = $request->nama_biller;
+        $biller->save();
 
-        $mitra->update($request->all());
-        return redirect('/mitra')->with('success', 'Mitra Updated!');
+        $biller->update($request->all());
+        toast('Akun berhasil diupdate', 'success');
+        return redirect('/kelolabiller');
     }
 
     /**
@@ -99,10 +94,12 @@ class MitraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DataMitra $mitra)
+    public function destroy(Billers $biller, $id)
     {
-        $mitra->delete();
-        toast('Akun berhasil dibuat', 'success');
-        return redirect('/mitra');
+        $biller = Billers::find($id);
+
+        $biller->delete();
+        toast('Data biller berhasil dihapus', 'success');
+        return redirect('/kelolabiller');
     }
 }

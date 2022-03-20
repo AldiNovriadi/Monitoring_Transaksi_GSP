@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountingController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\KelolabankController;
+use App\Http\Controllers\KelolabillerController;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Imports\UsersImport;
@@ -12,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\TransaksiController;
+use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,14 +52,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/transaksi/listtransaksinonpln', [TransaksiController::class, 'listtransaksinonpln']);
     Route::get('/transaksi/listtransaksinonplnmonth', [TransaksiController::class, 'listtransaksinonplnmonth']);
     Route::get('file-import-export', [UserController::class, 'fileImportExport']);
-    Route::get('/file-export', [TransaksiController::class, 'export'])->name('file-export');
+    Route::get('/file-export/{kd}', [TransaksiController::class, 'export'])->name('file-export');
+    Route::get('/file-export', [TransaksiController::class, 'exportfilter'])->name('file-export');
+    Route::get('/transaksi/filter', [TransaksiController::class, 'filter']);
     Route::get('/transaksi/today', [TransaksiController::class, 'transactiontoday']);
     Route::get('/transaksi/month', [TransaksiController::class, 'transactionmonth']);
+    Route::get('/bank', [BankController::class, 'index']);
+    Route::get('/mitra', [BankController::class, 'mitra']);
+    Route::get('/accounting', [AccountingController::class, 'index']);
+    Route::get('/accounting/transaksi', [AccountingController::class, 'transaksi']);
+    Route::get('/accounting/detailtransaksi', [AccountingController::class, 'detailtransaksi']);
+    Route::get('/accounting/laporan', [AccountingController::class, 'laporan']);
     Route::Resource('/transaksi', TransaksiController::class);
-    Route::Resource('/mitra', MitraController::class);
+    Route::Resource('/account', AccountController::class);
     Route::Resource('/kelolabank', KelolabankController::class);
+    Route::Resource('/kelolabiller', KelolabillerController::class);
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/register', [LoginController::class, 'register']);
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);

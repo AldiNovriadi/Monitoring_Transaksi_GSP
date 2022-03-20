@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bank;
+use App\Models\DataMitra;
 use Illuminate\Http\Request;
 
-class KelolabankController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class KelolabankController extends Controller
      */
     public function index()
     {
-        $bank = Bank::all();
-        return view('kelolabank.index', ['bank' => $bank]);
+        $account = DataMitra::all();
+        return view('account.index', ['account' => $account]);
     }
 
     /**
@@ -25,7 +25,7 @@ class KelolabankController extends Controller
      */
     public function create()
     {
-        return view('kelolabank.create');
+        return view('account.create');
     }
 
     /**
@@ -37,14 +37,15 @@ class KelolabankController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_bank' => 'required',
-            'nama_bank' => 'required',
-            'filegambar' => 'required'
+            'name' => 'required',
+            'email' => 'required',
+            'role' => 'required',
+            'status' => 'required'
         ]);
 
-        Bank::create($request->all());
-        toast('Data bank berhasil dibuat', 'success');
-        return redirect('/kelolabank');
+        DataMitra::create($request->all());
+        toast('Akun berhasil dibuat', 'success');
+        return redirect('/account');
     }
 
     /**
@@ -66,8 +67,8 @@ class KelolabankController extends Controller
      */
     public function edit($id)
     {
-        $bank = Bank::find($id);
-        return view('kelolabank.edit', ['bank' => $bank]);
+        $account = DataMitra::find($id);
+        return view('account.edit', compact('account'));
     }
 
     /**
@@ -77,18 +78,18 @@ class KelolabankController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bank $bank, $id)
+    public function update(Request $request, DataMitra $account)
     {
-        // dd($request);
-        $bank = bank::find($id);
-        $bank->kode_bank = $request->kode_bank;
-        $bank->nama_bank = $request->nama_bank;
-        $bank->filegambar = $request->filegambar;
-        $bank->save();
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'role' => 'required',
+            'status' => 'required'
+        ]);
 
-        $bank->update($request->all());
+        $account->update($request->all());
         toast('Akun berhasil diupdate', 'success');
-        return redirect('/kelolabank');
+        return redirect('/account');
     }
 
     /**
@@ -97,12 +98,10 @@ class KelolabankController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bank $bank, $id)
+    public function destroy(DataMitra $account)
     {
-        $bank = Bank::find($id);
-
-        $bank->delete();
-        toast('Data Bank berhasil dihapus', 'success');
-        return redirect('/kelolabank');
+        $account->delete();
+        toast('Akun berhasil dibuat', 'success');
+        return redirect('/account');
     }
 }

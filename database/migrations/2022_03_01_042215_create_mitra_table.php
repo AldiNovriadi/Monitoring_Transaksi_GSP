@@ -17,7 +17,6 @@ class CreateMitraTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('role');
             $table->string('status');
             $table->timestamps();
         });

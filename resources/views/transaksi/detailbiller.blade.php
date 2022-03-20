@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('transaksi.layout')
 
 @section('title')
     Transaksi {{ $biller->nama_biller }}

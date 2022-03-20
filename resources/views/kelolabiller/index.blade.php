@@ -1,18 +1,18 @@
-@extends('kelolabank.layout')
+@extends('kelolabiller.layout')
 
 @section('title')
-    Kelola Data Bank
+    Kelola Data Biller
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Kelola Data Bank</h1>
+        <h1>Kelola Data Biller</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Kelola Data Bank</li>
+                <li class="breadcrumb-item active">Kelola Data Biller</li>
             </ol>
         </nav>
     </div>
@@ -22,31 +22,29 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Kelola Data Bank</h5>
-                        <p><a href="/kelolabank/create"> <button id="addRow" type="submit" class="btn btn-primary ">Tambah
-                                    Data Bank
+                        <h5 class="card-title">Kelola Data Biller</h5>
+                        <p><a href="/kelolabiller/create"> <button id="addRow" type="submit" class="btn btn-primary ">Tambah
+                                    Data Biller
                                 </button></a> </p>
                         <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
                                     <th width="5%"> No</th>
                                     <th>Nama</th>
-                                    <th>Kode Bank</th>
-                                    <th>File Gambar</th>
+                                    <th>Kode Biller</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($bank as $banks)
+                                @foreach ($biller as $billers)
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
-                                        <td> {{ $banks->nama_bank }} </td>
-                                        <td> {{ $banks->kode_bank }}</td>
-                                        <td> {{ $banks->filegambar }}</td>
+                                        <td> {{ $billers->nama_biller }} </td>
+                                        <td> {{ $billers->kode_biller }}</td>
                                         <td class="text-center">
-                                            <a href="/kelolabank/{{ $banks->id }}/edit/" class="btn btn-warning"
+                                            <a href="/kelolabiller/{{ $billers->id }}/edit/" class="btn btn-warning"
                                                 style="display: inline-block;"> <i class="bx bx-edit"></i></a>
-                                            <form action="/kelolabank/{{ $banks->id }}" method="post"
+                                            <form action="/kelolabiller/{{ $billers->id }}" method="post"
                                                 style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
@@ -70,7 +68,7 @@
         $(document).ready(function() {
             $('#example').DataTable({
                 "language": {
-                    "emptyTable": "Tidak ada data bank"
+                    "emptyTable": "Tidak ada data biller"
                 },
             });
         });

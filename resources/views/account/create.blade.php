@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('account.layout')
 
 @section('title')
     Data Akun
@@ -23,7 +23,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Tambah Akun Mitra</h5>
-                        <form class="row g-3" method="post" action="/mitra">
+                        <form class="row g-3" method="post" action="/account">
                             @csrf
                             <div class="col-lg-12">
                                 <div id="inputFormRow">
@@ -36,9 +36,10 @@
                                     <span class="text-secondary">Role</span>
                                     <select name="role" class="form-select" aria-label="Default select example">
                                         <option selected>-- Masukkan Role --</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Accounting">Accounting</option>
+                                        <option value="Bank">Bank</option>
+                                        <option value="Mitra">Mitra</option>
                                     </select> </br>
                                     <span class="text-secondary">Status</span>
                                     <input type="text" name="status" class="form-control m-input"

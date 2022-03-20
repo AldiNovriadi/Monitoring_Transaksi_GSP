@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DataMitra extends Model
 {
     protected $table = 'mitra';
-    protected $fillable = ['name', 'email', 'role', 'status'];
+    protected $fillable = ['name', 'email', 'status'];
 
     use HasFactory;
 }
