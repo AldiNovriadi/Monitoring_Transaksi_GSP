@@ -16,8 +16,9 @@ class CreateMitraTable extends Migration
         Schema::create('mitra', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
-            $table->string('status');
+            $table->string('email')->unique();
+            $table->string('role');
+            $table->foreignId('bank_id');
             $table->timestamps();
         });
     }

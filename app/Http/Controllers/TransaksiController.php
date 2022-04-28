@@ -30,9 +30,6 @@ class TransaksiController extends Controller
         $transactionbank = Bank::all()->count();
         $transactionbiller = Billers::all()->count();
 
-        $report = \App\Models\Transaction::all();
-        $categories = [];
-
         $lastDay = date('d', strtotime(Carbon::now()->endOfMonth()->toDateString()));
         $pln = [];
         $non_pln = [];
@@ -46,13 +43,6 @@ class TransaksiController extends Controller
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
-
-        // dd($pln);
-
-        // foreach ($report as $reports) {
-        //     $categories[] = $reports->description;
-        //     $jumlah[] = $reports->voters->count();
-        //     // dd(json_encode($categories));    
 
         return view('transaksi.index', ['transaction' => $transaction, 'transactiontoday' => $transactiontoday, 'transactionmount' => $transactionmount, 'transactionbank' => $transactionbank, 'transactionbiller' => $transactionbiller])
             ->with(['tanggal' => json_encode($tanggal, JSON_NUMERIC_CHECK), 'pln' => json_encode($pln, JSON_NUMERIC_CHECK), 'non_pln' => json_encode($non_pln, JSON_NUMERIC_CHECK)]);
@@ -271,7 +261,11 @@ class TransaksiController extends Controller
             $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
         }
 
-        $jumlah = 0;
+        $jumlahpelanggan = 0;
+        $jumlahlembar = 0;
+        $jumlahrptag = 0;
+        $jumlahrpadm = 0;
+        $jumlahtotal = 0;
         foreach ($transaction as $trans) {
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("B{$row}", "{$trans->tanggal}");
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", $trans->cid->nama_cid);
@@ -284,12 +278,20 @@ class TransaksiController extends Controller
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", $trans->rpadm);
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $trans->total);
             $row++;
-            $jumlah += $trans->total;
+            $jumlahpelanggan += $trans->rekening;
+            $jumlahlembar += $trans->bulan;
+            $jumlahrptag += $trans->rptag;
+            $jumlahrpadm += $trans->rpadm;
+            $jumlahtotal += $trans->total;
         }
 
         $row += 1;
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", 'Sub Total');
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $jumlah);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", 'Sub Total');
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("G{$row}", $jumlahpelanggan);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("H{$row}", $jumlahlembar);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("I{$row}", $jumlahrptag);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", $jumlahrpadm);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $jumlahtotal);
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -301,24 +303,38 @@ class TransaksiController extends Controller
 
     public function export($kd)
     {
-        $spreadsheet = IOFactory::load('excelTemplate/Bank_BNI1.xls');
+        $bank = Bank::where('kode_bank', $kd)->first();
+        // $spreadsheet = IOFactory::load('excelTemplate/Bank_BNI1.xls');
+        $spreadsheet = IOFactory::load('excelTemplate/' . $bank->filetemplate);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("B3", date("d F Y"));
         // $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
         // $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
         $row = 9;
         $partner = 8;
         $no = 1;
         $cid = Transaction::select('cid_id')->with('cid')->where('bank_id', $kd)->groupBy('cid_id')->get();
-
+        $aggregator = [];
+        $nonAggregator = [];
         foreach ($cid as $data) {
+            if ($data->cid->jenis == 'Aggregator') {
+                $aggregator[] = $data;
+            } else {
+                $nonAggregator[] = $data;
+            }
+        }
 
-            $produks = DB::table('transaction')->select('produk_id', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('cid_id', $data->cid_id)->groupBy('produk_id')->get();
 
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$partner}", "{$data->cid_id}");
+        foreach ($nonAggregator as $data) {
+
+            $produks = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('cid_id', $data->cid_id)->where('tanggal', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->get();
+
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$partner}", "{$data->cid->nama_cid}");
 
             foreach ($produks as $produk) {
-                $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", "{$produk->produk_id}");
-                $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $data->cid_id);
-                $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", "");
+                $namaProduk = Produk::select('nama_produk')->where('kode_produk', $produk->produk_id)->first();
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", "{$namaProduk->nama_produk}");
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $namaProduk->nama_produk);
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $produk->tanggal);
                 $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", $produk->pelanggan);
                 $spreadsheet->setActiveSheetIndex(0)->setCellValue("G{$row}", $produk->lembar);
                 $spreadsheet->setActiveSheetIndex(0)->setCellValue("H{$row}", $produk->tagihan);
@@ -326,7 +342,7 @@ class TransaksiController extends Controller
                 $spreadsheet->setActiveSheetIndex(0)->setCellValue("j{$row}", $produk->total);
                 $row++;
             }
-            $partner += 16;
+            $partner += 17;
             $row  = $partner + 1;
             // $spreadsheet->setActiveSheetIndex(0)
             //     ->setCellValue("C{$partner}", "{$data->cid->nama_cid}")
@@ -341,6 +357,50 @@ class TransaksiController extends Controller
             // $row++;
             // $no++;
         }
+        $produk = ['99501', '99502', '99504'];
+        $cid_id = [];
+        foreach ($nonAggregator as $data) {
+            $cid_id[] = $data->cid_id;
+        }
+
+        if ($bank->kode_bank == 9) {
+            $rowAggregator = 93;
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$rowAggregator}", "Aggregator");
+            foreach ($produk as $data) {
+                $rowAggregator++;
+                $produkAggregator = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->whereIn('cid_id', $cid_id)->where('produk_id', $data)->where('tanggal', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->first();
+                if (!empty($produkAggregator)) {
+                    $namaProduk = Produk::select('nama_produk')->where('kode_produk', $produkAggregator->produk_id)->first();
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$rowAggregator}", "{$namaProduk->nama_produk}");
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$rowAggregator}", $namaProduk->nama_produk);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$rowAggregator}", $produkAggregator->tanggal);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$rowAggregator}", $produkAggregator->pelanggan);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("G{$rowAggregator}", $produkAggregator->lembar);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("H{$rowAggregator}", $produkAggregator->tagihan);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("i{$rowAggregator}", $produkAggregator->admin);
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValue("j{$rowAggregator}", $produkAggregator->total);
+                }
+            }
+        }
+        // $rowDistribusi = 118;
+
+        // foreach ($produk as $data) {
+
+        //     $produkDistribusi = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('produk_id', $data)->where('tanggal', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->first();
+        //     if (!empty($produkDistribusi)) {
+        //         $namaProduk = Produk::select('nama_produk')->where('kode_produk', $produkDistribusi->produk_id)->first();
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$rowDistribusi}", "{$namaProduk->nama_produk}");
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$rowDistribusi}", "{$produkDistribusi->tanggal}");
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$rowDistribusi}", $produkDistribusi->pelanggan);
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$rowDistribusi}", $produkDistribusi->lembar);
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("G{$rowDistribusi}", $produkDistribusi->tagihan);
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("H{$rowDistribusi}", $produkDistribusi->admin);
+        //         $spreadsheet->setActiveSheetIndex(0)->setCellValue("I{$rowDistribusi}", $produkDistribusi->total);
+        //         $rowDistribusi++;
+        //     }
+        // }
+
+
         $writer = IOFactory::createWriter($spreadsheet, 'Xls');
         ob_end_clean(); //
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

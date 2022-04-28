@@ -91,6 +91,12 @@
                                                 id="yourPassword" required>
                                             <div class="invalid-feedback">Please enter your password!</div>
                                         </div>
+                                        <div class="col-12">
+                                            <label for="yourPassword" class="form-label">Confirm Password</label>
+                                            <input type="password" name="cpassword" class="form-control"
+                                                id="yourPassword" required>
+                                            <div class="invalid-feedback">Please enter your password!</div>
+                                        </div>
 
                                         <div class="col-12">
                                             <div class="form-check">

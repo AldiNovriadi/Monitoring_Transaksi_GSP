@@ -1,18 +1,18 @@
-@extends('account.layout')
+@extends('kelolamitra.layout')
 
 @section('title')
-    Data Akun
+    Kelola Data Mitra
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Data Akun</h1>
+        <h1>Kelola Data Mitra</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Data Akun</li>
+                <li class="breadcrumb-item active">Kelola Data Mitra</li>
             </ol>
         </nav>
     </div>
@@ -22,31 +22,31 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Data Akun Mitra</h5>
-                        <p><a href="/account/create"> <button id="addRow" type="submit" class="btn btn-primary ">Tambah Data
-                                    Akun
+                        <h5 class="card-title">Kelola Data Mitra</h5>
+                        <p><a href="/kelolamitra/create"> <button id="addRow" type="submit" class="btn btn-primary ">Tambah
+                                    Data Mitra
                                 </button></a> </p>
-                        <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
                                     <th width="5%"> No</th>
                                     <th>Nama</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
+                                    <th>Kode Mitra</th>
+                                    <th>Bank</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($account as $accounts)
+                                @foreach ($mitra as $mitras)
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
-                                        <td> {{ $accounts->name }} </td>
-                                        <td> {{ $accounts->email }}</td>
-                                        <td> {{ $accounts->role }}</td>
+                                        <td> {{ $mitras->nama_biller }} </td>
+                                        <td> {{ $mitras->kode_biller }}</td>
+                                        <td> {{ $mitras->kode_biller }}</td>
                                         <td class="text-center">
-                                            <a href="/account/{{ $accounts->id }}/edit/" class="btn btn-warning"
+                                            <a href="/kelolabiller/{{ $mitras->id }}/edit/" class="btn btn-warning"
                                                 style="display: inline-block;"> <i class="bx bx-edit"></i></a>
-                                            <form action="/account/{{ $accounts->id }}" method="post"
+                                            <form action="/kelolabiller/{{ $mitras->id }}" method="post"
                                                 style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
@@ -70,7 +70,7 @@
         $(document).ready(function() {
             $('#example').DataTable({
                 "language": {
-                    "emptyTable": "Tidak ada akun account"
+                    "emptyTable": "Tidak ada data biller"
                 },
             });
         });

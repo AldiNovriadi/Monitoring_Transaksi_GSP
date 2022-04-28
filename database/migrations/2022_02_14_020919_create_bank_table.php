@@ -18,6 +18,8 @@ class CreateBankTable extends Migration
             $table->string('kode_bank')->unique();
             $table->string('nama_bank');
             $table->string('filegambar');
+            $table->string('filetemplate');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

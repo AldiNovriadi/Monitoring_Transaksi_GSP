@@ -66,18 +66,19 @@
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
             <li>
-                <a href="/transaksi/today">
-                    <i class="ri-arrow-right-circle-fill"></i><span>Import Transaksi</span>
-                </a>
-            </li>
-            {{-- <li>
-                <a href="/transaksi/month">
-                    <i class="ri-arrow-right-circle-fill"></i><span>Transaksi Bulan ini</span>
-                </a>
-            </li> --}}
-            <li>
                 <a href="/transaksi/filter">
                     <i class="ri-arrow-right-circle-fill"></i><span>Filtering Transaksi</span>
+                </a>
+            </li>
+            <li>
+                <a href="/transaksi/today">
+                    <i class="ri-arrow-right-circle-fill"></i><span>Transaksi Hari
+                        ini</span>
+                </a>
+            </li>
+            <li>
+                <a href="/transaksi/month">
+                    <i class="ri-arrow-right-circle-fill"></i><span>Transaksi Bulan ini</span>
                 </a>
             </li>
         </ul>

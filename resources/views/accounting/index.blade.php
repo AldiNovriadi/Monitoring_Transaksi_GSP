@@ -111,20 +111,22 @@
                             <div id="reportsChart"></div>
 
                             <script>
+                                var tanggal = <?php echo $tanggal; ?>;
+                                var pln = <?php echo $pln; ?>;
+                                var non_pln = <?php echo $non_pln; ?>;
+
                                 document.addEventListener("DOMContentLoaded", () => {
                                     new ApexCharts(document.querySelector("#reportsChart"), {
                                         series: [{
-                                            name: 'Sales',
-                                            data: [31, 40, 28, 51, 42, 82, 56],
+                                            name: 'PLN',
+                                            data: pln,
                                         }, {
-                                            name: 'Revenue',
-                                            data: [11, 32, 45, 32, 34, 52, 41]
-                                        }, {
-                                            name: 'Customers',
-                                            data: [15, 11, 32, 18, 9, 24, 11]
+                                            name: 'Non PLN',
+                                            data: non_pln
                                         }],
                                         chart: {
                                             height: 350,
+
                                             type: 'area',
                                             toolbar: {
                                                 show: false
@@ -151,12 +153,8 @@
                                             width: 2
                                         },
                                         xaxis: {
-                                            type: 'datetime',
-                                            categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z",
-                                                "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z",
-                                                "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z",
-                                                "2018-09-19T06:30:00.000Z"
-                                            ]
+
+                                            categories: tanggal
                                         },
                                         tooltip: {
                                             x: {

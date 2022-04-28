@@ -8,11 +8,11 @@
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Transaksi Hari Ini</h1>
+        <h1>Import Transaksi</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Transaksi Hari Ini</li>
+                <li class="breadcrumb-item active">Import Transaksi</li>
             </ol>
         </nav>
     </div>
@@ -22,7 +22,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Transaksi Hari Ini</h5>
+                        <h5 class="card-title">Import Transaksi</h5>
                         <p>
                         <form action="/importTransaksi" method="post" enctype="multipart/form-data">
                             @csrf

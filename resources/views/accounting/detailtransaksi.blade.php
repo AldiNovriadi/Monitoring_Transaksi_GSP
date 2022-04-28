@@ -41,9 +41,10 @@
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
                                         <td> {{ $transactions->tanggal }} </td>
-                                        <td> {{ $transactions->cid->nama_cid }} </td>
-                                        <td> {{ $transactions->rekening }}</td>
-                                        <td> Rp. {{ number_format($transactions->rptag) }}</td>
+                                        <td> {{ \App\Models\Cid::where('kode_cid', $transactions->cid_id)->first()->nama_cid }}
+                                        </td>
+                                        <td> {{ $transactions->lembar }}</td>
+                                        <td> Rp. {{ number_format($transactions->tagihan) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

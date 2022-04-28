@@ -42,9 +42,13 @@
                                         <option value="Bank">Bank</option>
                                         <option value="Mitra">Mitra</option>
                                     </select> </br>
-                                    <span class="text-secondary">Status</span>
-                                    <input type="text" name="status" class="form-control m-input"
-                                        value="{{ $account->status }}" autocomplete="off"></br>
+                                    <span class="text-secondary">Bank</span>
+                                    <select name="bank_id" class="form-select" aria-label="Default select example"
+                                        value="{{ $account->bank->nama_bank }}">
+                                        @foreach ($bank as $banks)
+                                            <option value="{{ $banks->id }}"> {{ $banks->nama_bank }} </option>
+                                        @endforeach
+                                    </select> </br>
                                 </div>
                             </div>
                             <p align="right">

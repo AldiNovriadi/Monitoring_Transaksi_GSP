@@ -74,19 +74,40 @@ class LoginController extends Controller
     public function actionregis(Request $request)
     {
         $validated = $request->validate([
-            'fullname' => 'required|max:255|exists:Person,name',
-            'email' => 'required|email:dns|exists:Person,email',
+            'name' => 'required|max:255',
+            'email' => 'required|email:dns',
             'password' => 'required|min:8',
             'cpassword' => 'required|min:8'
         ]);
-        $person_id = DataMitra::where('email', $request->email)->select('id')->first();
+
+        if ($request->password != $request->cpassword) {
+            toast('Password tidak sesuai', 'error');
+            return back();
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if (!empty($user)) {
+            toast('Error Email', 'error');
+            return back();
+        }
+
+        $mitra_id = DataMitra::where('email', $request->email)->where('name', $request->name)->first();
+        if (empty($mitra_id)) {
+            toast('tidak terdaftar', 'error');
+            return back();
+        }
+
+
         $data = new User([
-            'person_id' => $person_id->id,
+            'mitra_id' => $mitra_id->id,
+            'name' => $mitra_id->name,
             'email' => $request->get('email'),
+            'role' => $mitra_id->role,
             'password' => hash::make($request->get('password'))
         ]);
         $data->save();
-        return back()->with('/login', 'Register Succes! You can LogIn Now');
+        toast('Berhasil buat akun', 'success');
+        return redirect('/login');
     }
 
     /**

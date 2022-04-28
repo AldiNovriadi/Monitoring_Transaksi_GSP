@@ -107,6 +107,7 @@
                                         <h6>Filter</h6>
                                     </li>
 
+                                    <li><a class="dropdown-item" href="/kelolamitra"> Data Mitra</a></li>
                                     <li><a class="dropdown-item" href="/kelolabiller">Data Biller</a></li>
                                 </ul>
                             </div>
@@ -208,43 +209,8 @@
 
                     </div>
                 </div><!-- End Reports -->
-                {{-- <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
-                            <thead class="table-secondary">
-                                <tr class="text-center">
-                                    <th width="5%"> No</th>
-                                    <th>Tanggal</th>
-                                    <th>Mitra</th>
-                                    <th>Distribusi</th>
-                                    <th>Produk</th>
-                                    <th>Pelanggan</th>
-                                    <th>Lembar</th>
-                                    <th>Bulan</th>
-                                    <th>Rupiah Tagihan</th>
-                                    <th>Rupiah Admin</th>
-                                    <th>Rupiah Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($transaction as $transactions)
-                                    <tr>
-                                        <td class="text-center"> <?php echo $no++; ?> </td>
-                                        <td> {{ $transactions->tanggal }} </td>
-                                        <td> {{ $transactions->cid->nama_cid }} </td>
-                                        <td> {{ $transactions->kd->nama_kd }}</td>
-                                        <td> {{ $transactions->produk->nama_produk }}</td>
-                                        <td> {{ $transactions->bank->nama_bank }}</td>
-                                        <td> {{ $transactions->rekening }}</td>
-                                        <td> {{ $transactions->bulan }}</td>
-                                        <td> Rp. {{ number_format($transactions->rptag) }}</td>
-                                        <td> Rp. {{ number_format($transactions->rpadm) }}</td>
-                                        <td> Rp. {{ number_format($transactions->total) }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table> --}}
+
             </div>
-        </div>
-        </div>
         </div>
     </section>
 @endsection

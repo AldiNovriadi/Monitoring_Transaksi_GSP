@@ -1,4 +1,4 @@
-@extends('transaksi.layout')
+@extends('accounting.layout')
 
 @section('title')
     Filtering Transaksi
@@ -100,7 +100,7 @@
                 <div class="card">
                     <div class="card-body"> </br>
                         <p><a
-                                href="/file-exportadmin?tanggalawal={{ Request::get('tanggalawal') }}&tanggalakhir={{ Request::get('tanggalakhir') }}&bank={{ Request::get('bank') }}&mitra={{ Request::get('mitra') }}&produk={{ Request::get('produk') }}">
+                                href="/file-exportaccounting?tanggalawal={{ Request::get('tanggalawal') }}&tanggalakhir={{ Request::get('tanggalakhir') }}&bank={{ Request::get('bank') }}&mitra={{ Request::get('mitra') }}&produk={{ Request::get('produk') }}">
                                 <button id="addRow" type="submit" class="btn btn-primary">
                                     <i class="ri-file-excel-2-fill"> </i> Export Laporan
                                 </button></a> </p>

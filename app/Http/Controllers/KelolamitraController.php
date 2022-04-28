@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cid;
 use App\Models\Bank;
-use App\Models\DataMitra;
 use Illuminate\Http\Request;
+use App\Http\Middleware\Mitra;
 
-class AccountController extends Controller
+class KelolamitraController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $account = DataMitra::all();
-        return view('account.index', ['account' => $account]);
+        $mitra = Cid::all();
+        return view('kelolamitra.index', compact('mitra'));
     }
 
     /**
@@ -26,9 +27,8 @@ class AccountController extends Controller
      */
     public function create()
     {
-        $bank = Bank::where('status', 0)->get();
-
-        return view('account.create', compact('bank'));
+        $bank = Bank::all();
+        return view('kelolamitra.create', compact('bank'));
     }
 
     /**
@@ -40,20 +40,14 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            'bank_id' => 'required'
+            'kode_cid' => 'required',
+            'nama_cid' => 'required',
+            'bank_id' => 'required',
         ]);
 
-        $bank = Bank::where('id', $request->bank_id)->first();
-        $bank->update([
-            'status' => 1
-        ]);
-
-        DataMitra::create($request->all());
-        toast('Akun berhasil dibuat', 'success');
-        return redirect('/account');
+        Cid::create($request->all());
+        toast('Data mitra berhasil dibuat', 'success');
+        return redirect('/kelolamitra');
     }
 
     /**
@@ -75,9 +69,7 @@ class AccountController extends Controller
      */
     public function edit($id)
     {
-        $bank = Bank::all();
-        $account = DataMitra::find($id);
-        return view('account.edit', compact('account', 'bank'));
+        //
     }
 
     /**
@@ -87,18 +79,9 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DataMitra $account)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            'status' => 'required'
-        ]);
-
-        $account->update($request->all());
-        toast('Akun berhasil diupdate', 'success');
-        return redirect('/account');
+        //
     }
 
     /**
@@ -107,10 +90,8 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DataMitra $account)
+    public function destroy($id)
     {
-        $account->delete();
-        toast('Akun berhasil dibuat', 'success');
-        return redirect('/account');
+        //
     }
 }
