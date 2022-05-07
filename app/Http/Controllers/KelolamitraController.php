@@ -16,7 +16,7 @@ class KelolamitraController extends Controller
      */
     public function index()
     {
-        $mitra = Cid::all();
+        $mitra = Cid::with('Bank')->get();
         return view('kelolamitra.index', compact('mitra'));
     }
 
@@ -43,7 +43,14 @@ class KelolamitraController extends Controller
             'kode_cid' => 'required',
             'nama_cid' => 'required',
             'bank_id' => 'required',
+            'filetemplate'=>'mimes:xlsx, csv, xls'
         ]);
+
+        if($request->hasFile('filtetemplate')){
+            $file = $request->file('filtetemplate');
+            $file->move(public_path('/excelTemplate'),$file->getClientOriginalName());
+            $request['filetemplate'] = $file->getClientOriginalName();
+        }
 
         Cid::create($request->all());
         toast('Data mitra berhasil dibuat', 'success');
@@ -67,9 +74,11 @@ class KelolamitraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Cid $kelolamitra)
     {
-        //
+        $bank = Bank::all();
+        $mitra = $kelolamitra;
+        return view('kelolamitra.edit',compact('mitra','bank'));
     }
 
     /**
@@ -79,9 +88,31 @@ class KelolamitraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Cid $kelolamitra)
     {
-        //
+        $mitra = Cid::find($kelolamitra->id);
+        $request->validate([
+            'kode_cid' => 'required',
+            'nama_cid' => 'required',
+            'bank_id' => 'required',
+            'filetemplate'=>'mimes:xlsx, csv, xls'
+        ]);
+
+        if($request->hasFile('filtetemplate')){
+            if(!empty($mitra->filetemplate)){
+                unlink(public_path('/excelTemplate/'.$mitra->filetemplate));
+            }
+            $file = $request->file('filtetemplate');
+            $mitra->filetemplate = $file->getClientOriginalName();
+            $file->move(public_path('/excelTemplate'),$file->getClientOriginalName());
+        }
+        $mitra->kode_cid = $request->kode_cid;
+        $mitra->nama_cid = $request->nama_cid;
+        $mitra->bank_id = $request->bank_id;
+
+        $mitra->save();
+        toast('Data mitra berhasil diupdate', 'success');
+        return redirect('/kelolamitra');
     }
 
     /**
@@ -90,8 +121,15 @@ class KelolamitraController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Cid $kelolamitra)
     {
-        //
+        $kelolamitra->load('user');
+        if(!empty($kelolamitra->user)){
+            $kelolamitra->user->delete();
+        }
+
+        $kelolamitra->delete();
+        toast('Data Mitra berhasil dihapus', 'success');
+        return back();
     }
 }

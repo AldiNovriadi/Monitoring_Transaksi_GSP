@@ -32,7 +32,7 @@
                                     <th width="5%"> No</th>
                                     <th>Nama</th>
                                     <th>Kode Bank</th>
-                                    <th>File Gambar</th>
+                                    <th>File Template</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -42,7 +42,7 @@
                                         <td class="text-center"> <?php echo $no++; ?> </td>
                                         <td> {{ $banks->nama_bank }} </td>
                                         <td> {{ $banks->kode_bank }}</td>
-                                        <td> {{ $banks->filegambar }}</td>
+                                        <td> @if(!empty($banks->filetemplate)) <a href="{{asset('/excelTemplate/'.$banks->filetemplate )}}">{{ $banks->filetemplate }} @else - @endif</a></td>
                                         <td class="text-center">
                                             <a href="/kelolabank/{{ $banks->id }}/edit/" class="btn btn-warning"
                                                 style="display: inline-block;"> <i class="bx bx-edit"></i></a>

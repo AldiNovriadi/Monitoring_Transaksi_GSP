@@ -14,7 +14,7 @@
         </a>
     </li><!-- End Dashboard Nav -->
     <li class="nav-item">
-        <a class="nav-link " href="/bank/transaksimonth">
+        <a class="nav-link " href="/mitra/transaksimonth">
             <i class="bi bi-layout-text-window-reverse"></i>
             <span>Transaksi Per Bulan</span>
         </a>

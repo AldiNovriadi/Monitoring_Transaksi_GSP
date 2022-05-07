@@ -12,23 +12,24 @@ class BankController extends Controller
 {
     public function index()
     {
-        $transactiontoday = Transaction::where('tanggal', date('Y-m-d'))->count();
+        $transactiontoday = Transaction::where('tanggal', date('Y-m-d'))->where('bank_id',Bank::where('user_id',Auth::User()->id)->first()->kode_bank)->count();
+        $transactionMonth = Transaction::whereMonth('tanggal', date('m'))->whereYear('tanggal',date('Y'))->where('bank_id',Bank::where('user_id',Auth::User()->id)->first()->kode_bank)->count();
         $bank = Bank::with('transaction')->get();
         $bankmonth = Bank::with(['transaction' => function ($query) {
             $query->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
         }])->get();
 
-        return view('bank.index', ['bank' => $bank, 'bankmonth' => $bankmonth, 'transactiontoday' => $transactiontoday]);
+        return view('bank.index', ['bank' => $bank, 'bankmonth' => $bankmonth, 'transactiontoday' => $transactiontoday,'transactionMonth'=>$transactionMonth]);
     }
 
     public function transaksiini()
     {
         // $bank = Bank::where('kode_bank', $kode)->first();
-        $akun = DataMitra::with('bank')->find(Auth::user()->mitra_id);
+        $bank = Bank::where('user_id',Auth::User()->id)->first();
 
-        $trans = Transaction::where('tanggal', date('Y-m-d'))->where('bank_id', $akun->bank->kode_bank)->get();
+        $trans = Transaction::where('tanggal', date('Y-m-d'))->where('bank_id', $bank->kode_bank)->get();
 
-        return view('bank.transaksiini', compact('trans', 'akun'));
+        return view('bank.transaksiini', compact('trans', 'bank'));
     }
 
     public function transaksimonth()

@@ -20,27 +20,29 @@ class DatabaseSeeder extends Seeder
             "email" => 'admin@gsp.co.id',
             "password" => bcrypt('password'),
             "role" => 'Admin',
+            "is_aktif"=>1,
         ]);
 
-        User::create([
-            "name" => 'Bank',
-            "email" => 'bank@gsp.co.id',
-            "password" => bcrypt('password'),
-            "role" => 'Bank',
-        ]);
+        // User::create([
+        //     "name" => 'Bank',
+        //     "email" => 'bank@gsp.co.id',
+        //     "password" => bcrypt('password'),
+        //     "role" => 'Bank',
+        // ]);
 
-        User::create([
-            "name" => 'Mitra',
-            "email" => 'mitra@gsp.co.id',
-            "password" => bcrypt('password'),
-            "role" => 'Mitra',
-        ]);
+        // User::create([
+        //     "name" => 'Mitra',
+        //     "email" => 'mitra@gsp.co.id',
+        //     "password" => bcrypt('password'),
+        //     "role" => 'Mitra',
+        // ]);
 
         User::create([
             "name" => 'Bag Keuangan',
             "email" => 'accounting@gsp.co.id',
             "password" => bcrypt('password'),
             "role" => 'Accounting',
+            "is_aktif"=>1,
         ]);
     }
 }

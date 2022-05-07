@@ -17,9 +17,10 @@ class CreateBankTable extends Migration
             $table->id();
             $table->string('kode_bank')->unique();
             $table->string('nama_bank');
-            $table->string('filegambar');
-            $table->string('filetemplate');
-            $table->boolean('status');
+            $table->string('filegambar')->nullable();
+            $table->string('filetemplate')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

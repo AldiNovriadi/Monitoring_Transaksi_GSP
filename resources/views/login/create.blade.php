@@ -69,33 +69,32 @@
                                         @csrf
                                         <div class="col-12">
                                             <label for="yourName" class="form-label">Your Name</label>
-                                            <input type="text" name="name" class="form-control" id="yourName"
+                                            <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror" id="yourName"
                                                 required>
-                                            <div class="invalid-feedback">Please, enter your name!</div>
+                                                @error('name')  <div class="invalid-feedback">{{$message}}</div> @enderror
                                         </div>
 
                                         <div class="col-12">
                                             <label for="yourEmail" class="form-label">Your Email</label>
                                             <div class="input-group has-validation">
                                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                                <input type="email" name="email" class="form-control" id="yourEmail"
+                                                <input type="email" name="email" class="form-control  @error('email') is-invalid @enderror" id="yourEmail"
                                                     required>
-                                                <div class="invalid-feedback">Please enter a valid Email adddress!
-                                                </div>
+                                                    @error('email')  <div class="invalid-feedback">{{$message}}</div> @enderror
                                             </div>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control"
+                                            <input type="password" min=8 name="password" class="form-control  @error('password') is-invalid @enderror"
                                                 id="yourPassword" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
+                                            @error('password')  <div class="invalid-feedback">{{$message}}</div> @enderror
                                         </div>
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Confirm Password</label>
-                                            <input type="password" name="cpassword" class="form-control"
+                                            <input type="password" min=8 name="cpassword" class="form-control @error('cpassword') is-invalid @enderror"
                                                 id="yourPassword" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
+                                            @error('cpassword')  <div class="invalid-feedback">{{$message}}</div> @enderror
                                         </div>
 
                                         <div class="col-12">

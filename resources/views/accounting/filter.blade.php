@@ -11,7 +11,7 @@
         <h1>Filtering Transaksi</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
+                <li class="breadcrumb-item"><a href="/accounting">Home</a></li>
                 <li class="breadcrumb-item active">Filtering Transaksi</li>
             </ol>
         </nav>

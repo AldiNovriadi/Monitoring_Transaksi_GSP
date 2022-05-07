@@ -33,6 +33,7 @@
                                     <th>Nama</th>
                                     <th>Kode Mitra</th>
                                     <th>Bank</th>
+                                    <th>File Template</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -40,13 +41,15 @@
                                 @foreach ($mitra as $mitras)
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
-                                        <td> {{ $mitras->nama_biller }} </td>
-                                        <td> {{ $mitras->kode_biller }}</td>
-                                        <td> {{ $mitras->kode_biller }}</td>
+                                        <td> {{ $mitras->nama_cid }} </td>
+                                        <td> {{ $mitras->kode_cid }}</td>
+                                        <td> {{ @$mitras->Bank->nama_bank }}</td>
+                                        <td> @if(!empty($mitras->filetemplate)) <a href="{{asset('/excelTemplate/'.$mitras->filetemplate )}}">{{ $mitras->filetemplate }} @else - @endif</a></td>
+                                        
                                         <td class="text-center">
-                                            <a href="/kelolabiller/{{ $mitras->id }}/edit/" class="btn btn-warning"
+                                            <a href="/kelolamitra/{{ $mitras->id }}/edit/" class="btn btn-warning"
                                                 style="display: inline-block;"> <i class="bx bx-edit"></i></a>
-                                            <form action="/kelolabiller/{{ $mitras->id }}" method="post"
+                                            <form action="/kelolamitra/{{ $mitras->id }}" method="post"
                                                 style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')

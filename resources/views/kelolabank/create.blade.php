@@ -23,18 +23,19 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Tambah Data Bank</h5>
-                        <form class="row g-3" method="post" action="/kelolabank">
+                        <form class="row g-3" method="post" action="/kelolabank" enctype="multipart/form-data">
                             @csrf
                             <div class="col-lg-12">
                                 <div id="inputFormRow">
                                     <span class="text-secondary">Nama Bank</span>
                                     <input type="text" name="nama_bank" class="form-control m-input"
-                                        placeholder="Masukkan Nama Bank" autocomplete="off"></br>
+                                        placeholder="Masukkan Nama Bank" autocomplete="off" required></br>
                                     <span class="text-secondary">Kode Bank</span>
                                     <input type="text" name="kode_bank" class="form-control m-input"
-                                        placeholder="Masukkan Kode Bank" autocomplete="off"></br>
-                                    <span class="text-secondary">File Gambar</span>
-                                    <input class="form-control" name="filegambar" type="file" id="formFile"> </br>
+                                        placeholder="Masukkan Kode Bank" autocomplete="off" required></br>
+                                    <span class="text-secondary">File Template Excel </span>
+                                    <input class="form-control" name="filtetemplate" type="file" id="formFile"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" > </br>
+                                    
                                 </div>
                             </div>
                             <p align="right">

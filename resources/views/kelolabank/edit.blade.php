@@ -24,7 +24,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Edit Data Akun Bank</h5>
-                        <form class="row g-3" method="post" action="/kelolabank/{{ $bank->id }}">
+                        <form class="row g-3" method="post" action="/kelolabank/{{ $bank->id }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="col-lg-12">
@@ -35,9 +35,9 @@
                                     <span class="text-secondary">Kode Bank</span>
                                     <input type="text" name="kode_bank" class="form-control m-input"
                                         value="{{ $bank->kode_bank }}" autocomplete=" off"></br>
-                                    <span class="text-secondary">File Gambar</span>
-                                    <input class="form-control" name="filegambar" value="{{ $bank->filegambar }}"
-                                        type="file" id="formFile"> </br>
+                                    <span class="text-secondary">File Template Excel <b>(<span> Template Saat ini : @if(empty($bank->filetemplate)) Belum Ada @else <a href="{{asset('/excelTemplate/'.$bank->filetemplate)}}">{{$bank->filetemplate}}</a> @endif )</b></span>
+                                    
+                                    <input class="form-control" name="filtetemplate" type="file" id="formFile"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" > </br>
                                 </div>
                             </div>
                             <p align="right">

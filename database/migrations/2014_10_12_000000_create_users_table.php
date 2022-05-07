@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password')->nullable();
             $table->string('role');
-            $table->foreignId('mitra_id');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->boolean('is_aktif')->default(0);
+            $table->boolean('is_forget_password')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

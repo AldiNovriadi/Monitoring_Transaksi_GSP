@@ -11,7 +11,7 @@
         <h1>Dashboard</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/voting">Home</a></li>
+                <li class="breadcrumb-item"><a href="/mitra">Home</a></li>
                 <li class="breadcrumb-item active">Dashboard</li>
             </ol>
         </nav>
@@ -40,7 +40,7 @@
                             </div>
 
                             <div class="card-body">
-                                <a href="/transaksi/today">
+                                <a href="/mitra/transaksi">
                                     <h5 class="card-title">Transaksi <span>| Hari ini</span></h5>
                                 </a>
 
@@ -49,7 +49,7 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class=" ps-3">
-                                        <h6> 10</h6>
+                                        <h6> {{$transactiontoday}}</h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="card-body">
-                                <a href="/transaksi/listtransaksipln">
+                                <a href="/mitra/transaksimonth">
                                     <h5 class="card-title">Transaksi <span>| Bulan ini </span></h5>
                                 </a>
 
@@ -85,8 +85,7 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class="ps-3">
-                                        {{-- <h6>{{ $bankmonth->transaction->count() }}</h6> --}}
-                                        <h6> 99</h6>
+                                        <h6>{{ $transactionMonth }}</h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
 
                                     </div>

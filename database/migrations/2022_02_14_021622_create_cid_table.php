@@ -17,6 +17,12 @@ class CreateCidTable extends Migration
             $table->id();
             $table->string('kode_cid')->unique();
             $table->string('nama_cid');
+            $table->string('filetemplate')->nullable();
+            $table->string('jenis')->nullable();
+            $table->foreignId('bank_id')->nullable();
+            $table->foreign('bank_id')->references('id')->on('bank')->onDelete('set null');
+            $table->foreignId('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

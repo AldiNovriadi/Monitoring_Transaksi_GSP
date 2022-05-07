@@ -11,7 +11,7 @@
         <h1>Detail Transaksi</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
+                <li class="breadcrumb-item"><a href="/accounting">Home</a></li>
                 <li class="breadcrumb-item active">Detail Transaksi</li>
             </ol>
         </nav>
@@ -23,7 +23,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Detail Transaksi Hari Ini </h5>
-                        <p><a href="/file-export"> <button id="addRow" type="submit" class="btn btn-primary">
+                        <p><a href="/accounting/exportTransaksiDetail"> <button id="addRow" type="submit" class="btn btn-primary">
                                     <i class="ri-file-excel-2-fill"> </i> Export Laporan
                                 </button></a> </p>
                         <table id="example" class="table table-striped table-bordered" style="width:100%">

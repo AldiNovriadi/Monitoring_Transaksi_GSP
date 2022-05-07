@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'mitra_id'
+        'is_aktif',
+        'is_forget_password'
     ];
 
     /**

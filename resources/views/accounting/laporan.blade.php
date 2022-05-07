@@ -10,7 +10,7 @@
         <h1>Laporan Bulanan</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/transaksi">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/accounting">Dashboard</a></li>
                 <li class="breadcrumb-item active">Laporan Bulanan</li>
             </ol>
         </nav>
@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="row">
-                    {{-- @foreach ($bankmonth as $bankmonths) --}}
+                     @foreach ($bankmonths as $bankmonth) 
                     <!-- Sales Card -->
                     <div class="col-xxl-4 col-md-4">
                         <div class="card info-card sales-card">
@@ -37,10 +37,10 @@
                                 </ul>
                             </div>
                             <div class="card-body">
-                                {{-- <a href="/transaksi/detailmitramonth/{{ $bankmonths->kode_bank }}"> --}}
-                                <h5 class="card-title">Januari <span>| Laporan</span>
+                                 <a href="/accounting/monthReport?month={{$bankmonth['kd_bulan']}}&year={{date('Y')}}">
+                                <h5 class="card-title">{{$bankmonth['bulan']}} <span>| Laporan</span>
                                 </h5>
-                                {{-- </a> --}}
+                                 </a> 
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -48,8 +48,7 @@
                                         {{-- <img src="{{ asset('/assets/img/' . $bankmonths->filegambar) }}" alt=""> --}}
                                     </div>
                                     <div class="ps-3">
-                                        {{-- @dd($bankmonths); --}}
-                                        <h6> 18
+                                        <h6> {{$bankmonth['jumlah']}}
                                         </h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
                                     </div>
@@ -57,7 +56,7 @@
                             </div>
                         </div>
                     </div><!-- End Sales Card -->
-                    {{-- @endforeach --}}
+                    @endforeach
                 </div>
             </div>
         </div>

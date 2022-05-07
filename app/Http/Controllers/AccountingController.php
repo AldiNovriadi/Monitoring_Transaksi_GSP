@@ -8,7 +8,9 @@ use App\Models\Bank;
 use App\Models\Produk;
 use App\Models\Billers;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -56,7 +58,30 @@ class AccountingController extends Controller
 
     public function laporan()
     {
-        return view('accounting.laporan');
+        $bankmonths = null;
+        $months = [
+            ['01','Januari'],
+            ['02','Februari'],
+            ['03','Maret'],
+            ['04','April'],
+            ['05','Mei'],
+            ['06','Juni'],
+            ['07','Juli'],
+            ['08','Agustus'],
+            ['09','September'],
+            ['10','Oktober'],
+            ['11','November'],
+            ['12','Desember']
+        ];
+
+        foreach($months as $month){
+            $bankmonths[] = [
+                'kd_bulan'=>$month[0],
+                'bulan'=>$month[1],
+                'jumlah'=>Transaction::whereMonth('tanggal',$month[0])->whereYear('tanggal',date('Y'))->count()
+            ];
+        }
+        return view('accounting.laporan',compact('bankmonths'));
     }
 
     public function filter(Request $request)
@@ -146,5 +171,90 @@ class AccountingController extends Controller
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header("Content-Disposition: attachment; filename=Reports Filter Transaksi_" . date('Y-m-d') . ".xlsx");
         $writer->save('php://output');
+    }
+
+    public function exportTransaksi(){
+        $transactions = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
+        $spreadsheet = IOFactory::load('excelTemplate/templateAccounting-Today.xlsx');
+        $row = 7;
+        $jumlahLembar = 0;
+        $jumlahFee = 0;
+        foreach($transactions as $transaction){
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("B{$row}", "{$transaction->tanggal}");
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", Cid::where('kode_cid', $transaction->cid_id)->first()->nama_cid);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", Produk::where('kode_produk', $transaction->produk_id)->first()->nama_produk);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $transaction->lembar);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", "Rp. ". number_format($transaction->tagihan));
+            $row++;
+            $jumlahLembar += $transaction->lembar;
+            $jumlahFee += $transaction->tagihan;
+        }
+
+        $row += 1;
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", 'Sub Total');
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $jumlahLembar);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", $jumlahFee);
+
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        ob_end_clean(); //
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment; filename=Reports Transaksi_" . date('Y-m-d') . ".xlsx");
+        $writer->save('php://output');
+    }
+
+    public function exportDetailTransaksi(){
+        $transactions = DB::table('transaction')->select('tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'tanggal')->get();
+        $spreadsheet = IOFactory::load('excelTemplate/templateAccounting-Detail.xlsx');
+        $row = 7;
+        $jumlahLembar = 0;
+        $jumlahFee = 0;
+        foreach($transactions as $transaction){
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("B{$row}", "{$transaction->tanggal}");
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", Cid::where('kode_cid', $transaction->cid_id)->first()->nama_cid);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $transaction->lembar);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", "Rp. ". number_format($transaction->tagihan));
+            $row++;
+            $jumlahLembar += $transaction->lembar;
+            $jumlahFee += $transaction->tagihan;
+        }
+
+        $row += 1;
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", 'Sub Total');
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $jumlahLembar);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $jumlahFee);
+
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        ob_end_clean(); //
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment; filename=Reports Detail Transaksi_" . date('Y-m-d') . ".xlsx");
+        $writer->save('php://output');
+    }
+
+    public function monthReport(Request $request){
+        $months = [
+            '01'=>'Januari',
+            '02'=>'Februari',
+            '03'=>'Maret',
+            '04'=>'April',
+            '05'=>'Mei',
+            '06'=>'Juni',
+            '07'=>'Juli',
+            '08'=>'Agustus',
+            '09'=>'September',
+            '10'=>'Oktober',
+            '11'=>'November',
+            '12'=>'Desember'
+        ];
+        try{
+            $month = $months[$request->month];
+        }catch(Exception $e){
+            abort('404');
+        }
+        $year = $request->get('year');
+
+        $transaction = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->whereMonth('tanggal', $request->get('month'))->whereYear('tanggal',$request->get('year'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
+        return view('accounting.detaillaporan',compact('transaction','month','year'));
     }
 }

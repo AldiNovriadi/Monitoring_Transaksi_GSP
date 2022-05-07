@@ -39,9 +39,15 @@ class KelolabankController extends Controller
         $request->validate([
             'kode_bank' => 'required',
             'nama_bank' => 'required',
-            'filegambar' => 'required'
+            'filetemplate'=>'mimes:xlsx, csv, xls'
         ]);
 
+        if($request->hasFile('filtetemplate')){
+            $file = $request->file('filtetemplate');
+            $file->move(public_path('/excelTemplate'),$file->getClientOriginalName());
+            $request['filetemplate'] = $file->getClientOriginalName();
+        }
+       
         Bank::create($request->all());
         toast('Data bank berhasil dibuat', 'success');
         return redirect('/kelolabank');
@@ -79,15 +85,26 @@ class KelolabankController extends Controller
      */
     public function update(Request $request, Bank $bank, $id)
     {
-        // dd($request);
+        $request->validate([
+            'kode_bank' => 'required',
+            'nama_bank' => 'required',
+            'filetemplate'=>'mimes:xlsx, csv, xls'
+        ]);
         $bank = bank::find($id);
+        if($request->hasFile('filtetemplate')){
+            if(!empty($bank->filetemplate)){
+                unlink(public_path('/excelTemplate/'.$bank->filetemplate));
+            }
+            $file = $request->file('filtetemplate');
+            $bank->filetemplate = $file->getClientOriginalName();
+            $file->move(public_path('/excelTemplate'),$file->getClientOriginalName());
+        }
         $bank->kode_bank = $request->kode_bank;
         $bank->nama_bank = $request->nama_bank;
-        $bank->filegambar = $request->filegambar;
         $bank->save();
 
         $bank->update($request->all());
-        toast('Akun berhasil diupdate', 'success');
+        toast('Data bank diupdate', 'success');
         return redirect('/kelolabank');
     }
 
@@ -97,11 +114,14 @@ class KelolabankController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bank $bank, $id)
+    public function destroy(Bank $kelolabank)
     {
-        $bank = Bank::find($id);
-
-        $bank->delete();
+        $kelolabank->load('user');
+        if(!empty($kelolabank->user)){
+            $kelolabank->user->delete();
+        }
+  
+        $kelolabank->delete();
         toast('Data Bank berhasil dihapus', 'success');
         return redirect('/kelolabank');
     }

@@ -42,7 +42,7 @@ class LoginController extends Controller
             }
         }
 
-        toast('Email atau password salah', 'success');
+        toast('Email atau password salah', 'error');
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
@@ -85,29 +85,42 @@ class LoginController extends Controller
             return back();
         }
 
-        $user = User::where('email', $request->email)->first();
-        if (!empty($user)) {
-            toast('Error Email', 'error');
+        $user = User::where('email', $request->email)->where('name',$request->name)->first();
+        if (empty($user) || $user->is_aktif == 1) {
+            toast('Data Akun Tidak Ditemukan', 'error');
             return back();
         }
 
-        $mitra_id = DataMitra::where('email', $request->email)->where('name', $request->name)->first();
-        if (empty($mitra_id)) {
-            toast('tidak terdaftar', 'error');
-            return back();
-        }
-
-
-        $data = new User([
-            'mitra_id' => $mitra_id->id,
-            'name' => $mitra_id->name,
-            'email' => $request->get('email'),
-            'role' => $mitra_id->role,
+        $user->update([
+            'is_aktif'=>1,
             'password' => hash::make($request->get('password'))
         ]);
-        $data->save();
+
         toast('Berhasil buat akun', 'success');
         return redirect('/login');
+    }
+
+    public function forgetPassword(){
+        return view('login.forgetPassword');
+    }
+
+    public function storeForgetPassword(Request $request){
+        $request->validate([
+            'email'=>'required'
+        ]);
+
+        $check = User::where('email',$request->email)->where('is_aktif',1)->first();
+        if(empty($check)){
+            toast('Email Tidak ditemukan','error');
+            return back();
+        }
+
+        $check->update([
+            'is_forget_password'=>1
+        ]);
+
+        alert()->success('Success','Pengajuan Reset Password Berhasil! Silahkan Tunggu Konfirmasi dari Admin');
+        return back();
     }
 
     /**

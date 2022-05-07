@@ -31,7 +31,7 @@ use Maatwebsite\Excel\Row;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 // Auth::routes();
@@ -64,19 +64,26 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/bank/transaksimonth', [BankController::class, 'transaksimonth']);
     Route::get('/mitra', [MitraController::class, 'index']);
     Route::get('/mitra/transaksi', [MitraController::class, 'transaksiini']);
+    Route::get('/mitra/transaksimonth', [MitraController::class, 'transaksimonth']);
     Route::get('/accounting', [AccountingController::class, 'index']);
     Route::get('/accounting/transaksi', [AccountingController::class, 'transaksi']);
     Route::get('/accounting/detailtransaksi', [AccountingController::class, 'detailtransaksi']);
     Route::get('/accounting/filter', [AccountingController::class, 'filter']);
     Route::get('/accounting/laporan', [AccountingController::class, 'laporan']);
+    Route::get('/accounting/exportTransaksi', [AccountingController::class, 'exportTransaksi']);
+    Route::get('/accounting/exportTransaksiDetail', [AccountingController::class, 'exportDetailTransaksi']);
+    Route::get('/accounting/monthReport', [AccountingController::class, 'monthReport']);
+    Route::patch('/account/{id}/resetPassword', [AccountController::class,'resetPassword']);
     Route::Resource('/transaksi', TransaksiController::class);
     Route::Resource('/account', AccountController::class);
     Route::Resource('/kelolabank', KelolabankController::class);
     Route::Resource('/kelolabiller', KelolabillerController::class);
     Route::Resource('/kelolamitra', KelolamitraController::class);
 });
-Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::get('/register', [LoginController::class, 'register']);
 Route::post('/register', [LoginController::class, 'actionregis']);
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
+Route::get('/forgetPassword', [LoginController::class, 'forgetPassword']);
+Route::post('/forgetPassword', [LoginController::class, 'storeForgetPassword']);

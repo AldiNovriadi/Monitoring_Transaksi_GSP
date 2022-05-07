@@ -27,28 +27,39 @@
                             @csrf
                             <div class="col-lg-12">
                                 <div id="inputFormRow">
+                                <span class="text-secondary">Role</span>
+                                    <select name="role" id="select_role" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>-- Masukkan Role --</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Accounting">Accounting</option>
+                                        <option value="Bank">Bank</option>
+                                        <option value="Mitra">Mitra</option>
+                                    </select> </br>
+                                    <div id="list_bank">
+                                    <span class="text-secondary">Bank</span>
+                                    <select name="bank_id" id="select_bank" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>-- Masukkan Bank --</option>
+                                        @foreach ($banks as $bank)
+                                            <option value="{{ $bank->id }}"> {{ $bank->nama_bank }} </option>
+                                        @endforeach
+                                    </select> </br>
+                                    </div>
+                                    <div id="list_mitra">
+                                    <span class="text-secondary">Mitra</span>
+                                    <select name="mitra_id" id="select_mitra" class="form-select" aria-label="Default select example">
+                                        <option selected disabled>-- Masukkan Mitra --</option>
+                                        @foreach ($mitras as $mitra)
+                                            <option value="{{ $mitra->id }}"> {{ $mitra->nama_cid }} </option>
+                                        @endforeach
+                                    </select> </br>
+                                    </div>
                                     <span class="text-secondary">Nama</span>
                                     <input type="text" name="name" class="form-control m-input" placeholder="Masukkan Nama"
                                         autocomplete="off"></br>
                                     <span class="text-secondary">Email</span>
                                     <input type="text" name="email" class="form-control m-input"
                                         placeholder="Masukkan Email" autocomplete="off"></br>
-                                    <span class="text-secondary">Role</span>
-                                    <select name="role" class="form-select" aria-label="Default select example">
-                                        <option selected>-- Masukkan Role --</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Accounting">Accounting</option>
-                                        <option value="Bank">Bank</option>
-                                        <option value="Mitra">Mitra</option>
-                                    </select> </br>
-                                    <span class="text-secondary">Bank</span>
-                                    <select name="bank_id" class="form-select" aria-label="Default select example">
-                                        <option selected>-- Masukkan Bank --</option>
-                                        @foreach ($bank as $banks)
-                                            <option value="{{ $banks->id }}"> {{ $banks->nama_bank }} </option>
-                                        @endforeach
-                                    </select> </br>
-
+                                    
                                 </div>
                             </div>
                             <p align="right">
@@ -61,4 +72,30 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function(){
+            $('#list_bank').hide();
+            $('#list_mitra').hide();
+            $('#select_role').on('change',function(){
+                $('#list_bank').hide();
+                $('#list_mitra').hide();
+                $('#select_bank').removeAttr('required');
+                $('#select_mitra').removeAttr('required');
+                $('#select_bank').val('');
+                $('#select_mitra').val('');
+                if($(this).val() == 'Bank'){
+                    $('#select_bank').prop('required','required');
+                    $('#list_bank').show();
+                }else if($(this).val() == 'Mitra'){
+                    $('#select_mitra').prop('required','required');
+                    $('#list_mitra').show();    
+                }
+            });
+        })
+    
+    </script>
+
 @endsection

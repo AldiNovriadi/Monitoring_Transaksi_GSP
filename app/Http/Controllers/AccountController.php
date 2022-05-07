@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cid;
 use App\Models\Bank;
+use App\Models\User;
 use App\Models\DataMitra;
 use Illuminate\Http\Request;
 
@@ -15,20 +17,22 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $account = DataMitra::all();
-        return view('account.index', ['account' => $account]);
+        $account = User::all();
+        return view('account.index', ['account' => $account]); // normal na kie
+
     }
 
     /**
      * Show the form for creating a new resource.
-     *
+     *  
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        $bank = Bank::where('status', 0)->get();
+        $banks = Bank::whereNull('user_id')->get();
+        $mitras = Cid::whereNull('user_id')->get();
 
-        return view('account.create', compact('bank'));
+        return view('account.create', compact('banks','mitras'));
     }
 
     /**
@@ -39,19 +43,42 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+        $is_aktif = 0;
+        $password = null;
         $request->validate([
             'name' => 'required',
             'email' => 'required',
             'role' => 'required',
-            'bank_id' => 'required'
         ]);
 
-        $bank = Bank::where('id', $request->bank_id)->first();
-        $bank->update([
-            'status' => 1
+        if($request->role == 'Admin' || $request->role == 'Accounting'){
+            $is_aktif = 1;
+            $password = bcrypt('password');
+        }
+
+        $user = User::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'role'=>$request->role,
+            'is_aktif'=>$is_aktif,
+            'password'=>$password,
         ]);
 
-        DataMitra::create($request->all());
+        if($request->role == 'Bank'){
+            $bank = Bank::where('id', $request->bank_id)->first();
+            $bank->update([
+                'user_id'=>$user->id
+            ]);
+        }
+
+        else if($request->role == 'Mitra'){
+        
+            $mitra = Cid::where('id',$request->mitra_id)->first();
+            $mitra->update([
+                'user_id'=>$user->id,
+            ]);
+        }
+
         toast('Akun berhasil dibuat', 'success');
         return redirect('/account');
     }
@@ -76,7 +103,7 @@ class AccountController extends Controller
     public function edit($id)
     {
         $bank = Bank::all();
-        $account = DataMitra::find($id);
+        $account = User::find($id);
         return view('account.edit', compact('account', 'bank'));
     }
 
@@ -87,7 +114,7 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DataMitra $account)
+    public function update(Request $request, User $account)
     {
         $request->validate([
             'name' => 'required',
@@ -107,10 +134,32 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DataMitra $account)
-    {
+    public function destroy(User $account)
+    {   
+        if($account->role == 'Bank'){
+            $bank = Bank::where('user_id',$account->id)->first();
+            $bank->update([
+                'user_id'=>null,
+            ]);
+        }
+
+        else if($account->role == 'Mitra'){
+            $mitra = Cid::where('user_id',$account->id)->first();
+            $mitra->update([
+                'user_id'=>null,
+            ]);
+        }
         $account->delete();
         toast('Akun berhasil dibuat', 'success');
         return redirect('/account');
+    }
+
+    public function resetPassword(User $id){
+        $id->update([
+            'password'=>bcrypt('password'),
+            'is_forget_password'=>0
+        ]);
+        toast('Password akun berhasil direset','success');
+        return back();
     }
 }
