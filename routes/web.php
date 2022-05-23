@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/mitra', [MitraController::class, 'index']);
     Route::get('/mitra/transaksi', [MitraController::class, 'transaksiini']);
     Route::get('/mitra/transaksimonth', [MitraController::class, 'transaksimonth']);
+    Route::get('/mitra/exportTransaksi', [MitraController::class, 'exportTransaksi']);
     Route::get('/accounting', [AccountingController::class, 'index']);
     Route::get('/accounting/transaksi', [AccountingController::class, 'transaksi']);
     Route::get('/accounting/detailtransaksi', [AccountingController::class, 'detailtransaksi']);

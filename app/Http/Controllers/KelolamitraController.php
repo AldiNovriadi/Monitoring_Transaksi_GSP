@@ -46,10 +46,19 @@ class KelolamitraController extends Controller
             'filetemplate'=>'mimes:xlsx, csv, xls'
         ]);
 
+        $bank_id = Bank::where('kode_bank',$request->bank_id)->first();
+        $request['bank_id'] = $bank_id->id;
+
         if($request->hasFile('filtetemplate')){
             $file = $request->file('filtetemplate');
             $file->move(public_path('/excelTemplate'),$file->getClientOriginalName());
             $request['filetemplate'] = $file->getClientOriginalName();
+        }
+
+        if(empty($request->is_aggregator)){
+            $request['jenis'] = 'NonAggregator';
+        }else{
+            $request['jenis'] = 'Aggregator';
         }
 
         Cid::create($request->all());

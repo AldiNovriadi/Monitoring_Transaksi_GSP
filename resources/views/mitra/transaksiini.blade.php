@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Transaksi Hari Ini </h5>
-                        <p><a href="#"> <button id="addRow" type="submit"
+                        <p><a href="/mitra/exportTransaksi"> <button id="addRow" type="submit"
                                     class="btn btn-primary">
                                     <i class="ri-file-excel-2-fill"> </i> Export Laporan
                                 </button></a> </p>
