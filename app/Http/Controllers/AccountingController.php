@@ -18,9 +18,9 @@ class AccountingController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
-        $transactiontoday = Transaction::where('tanggal', date('Y-m-d'))->count();
-        $transactionmount = Transaction::whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
+        $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->count();
+        $transactionmount = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
 
         $lastDay = date('d', strtotime(Carbon::now()->endOfMonth()->toDateString()));
         $pln = [];
@@ -28,10 +28,10 @@ class AccountingController extends Controller
         $tanggal = [];
         for ($i = 1; $i <= $lastDay; $i++) {
             $tanggal[] = $i;
-            $pln[] = Transaction::whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
+            $pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
             })->count();
-            $non_pln[] = Transaction::whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
+            $non_pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
@@ -42,7 +42,7 @@ class AccountingController extends Controller
 
     public function transaksi()
     {
-        $transaction = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
+        $transaction = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('is_valid',1)->whereDate('created_at', date('Y-m-d'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
         // $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
 
         return view('accounting.transaksi', compact('transaction'));
@@ -51,7 +51,7 @@ class AccountingController extends Controller
     public function detailtransaksi()
     {
         // $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
-        $transaction = DB::table('transaction')->select('tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'tanggal')->get();
+        $transaction = DB::table('transaction')->select('tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('is_valid',1)->whereDate('created_at', date('Y-m-d'))->groupBy('cid_id', 'tanggal')->get();
 
         return view('accounting.detailtransaksi', compact('transaction'));
     }
@@ -78,7 +78,7 @@ class AccountingController extends Controller
             $bankmonths[] = [
                 'kd_bulan'=>$month[0],
                 'bulan'=>$month[1],
-                'jumlah'=>Transaction::whereMonth('tanggal',$month[0])->whereYear('tanggal',date('Y'))->count()
+                'jumlah'=>Transaction::Valid()->whereMonth('tanggal',$month[0])->whereYear('tanggal',date('Y'))->count()
             ];
         }
         return view('accounting.laporan',compact('bankmonths'));
@@ -91,7 +91,7 @@ class AccountingController extends Controller
         $produk = Produk::all()->sortBy('nama_produk');
 
         if (count($request->all()) > 0) {
-            $transaction = Transaction::all();
+            $transaction = Transaction::Valid()->get();
             if (!empty($request->tanggalawal)) {
                 if (empty($request->tanggalakhir)) {
                     $request['tanggalakhir'] = $request->tanggalawal;
@@ -111,7 +111,7 @@ class AccountingController extends Controller
                 $transaction = $transaction->where('produk_id', $request->produk);
             }
         } else {
-            $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
+            $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
         return view('accounting.filter', compact('bank', 'mitra', 'produk', 'transaction'));
     }
@@ -122,7 +122,7 @@ class AccountingController extends Controller
         $spreadsheet = IOFactory::load('excelTemplate/templateFilter.xlsx');
         $row = 7;
         if (count($request->all()) > 0) {
-            $transaction = Transaction::all();
+            $transaction = Transaction::Valid()->get();
             if (!empty($request->tanggalawal)) {
                 if (empty($request->tanggalakhir)) {
                     $request['tanggalakhir'] = $request->tanggalawal;
@@ -142,7 +142,7 @@ class AccountingController extends Controller
                 $transaction = $transaction->where('produk_id', $request->produk);
             }
         } else {
-            $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
+            $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
 
         $jumlah = 0;
@@ -174,7 +174,7 @@ class AccountingController extends Controller
     }
 
     public function exportTransaksi(){
-        $transactions = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
+        $transactions = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('is_valid',1)->whereDate('created_at', date('Y-m-d'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
         $spreadsheet = IOFactory::load('excelTemplate/templateAccounting-Today.xlsx');
         $row = 7;
         $jumlahLembar = 0;
@@ -204,7 +204,7 @@ class AccountingController extends Controller
     }
 
     public function exportDetailTransaksi(){
-        $transactions = DB::table('transaction')->select('tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('tanggal', date('Y-m-d'))->groupBy('cid_id', 'tanggal')->get();
+        $transactions = DB::table('transaction')->select('tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('is_valid',1)->whereDate('created_at', date('Y-m-d'))->groupBy('cid_id', 'tanggal')->get();
         $spreadsheet = IOFactory::load('excelTemplate/templateAccounting-Detail.xlsx');
         $row = 7;
         $jumlahLembar = 0;
@@ -254,7 +254,7 @@ class AccountingController extends Controller
         }
         $year = $request->get('year');
 
-        $transaction = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->whereMonth('tanggal', $request->get('month'))->whereYear('tanggal',$request->get('year'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
+        $transaction = DB::table('transaction')->select('produk_id', 'tanggal', 'cid_id', DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'))->where('is_valid',1)->whereMonth('tanggal', $request->get('month'))->whereYear('tanggal',$request->get('year'))->groupBy('cid_id', 'produk_id', 'tanggal')->get();
         return view('accounting.detaillaporan',compact('transaction','month','year'));
     }
 }

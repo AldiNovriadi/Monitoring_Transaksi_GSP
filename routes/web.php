@@ -60,8 +60,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/transaksi/today', [TransaksiController::class, 'transactiontoday']);
     Route::get('/transaksi/month', [TransaksiController::class, 'transactionmonth']);
     Route::get('/bank', [BankController::class, 'index']);
+    Route::get('/bank/{id}/getMitra', [BankController::class, 'getMitra']);
     Route::get('/bank/transaksi', [BankController::class, 'transaksiini']);
     Route::get('/bank/transaksimonth', [BankController::class, 'transaksimonth']);
+    Route::get('/mitra/{id}/getProduk', [MitraController::class, 'getProduk']);
     Route::get('/mitra', [MitraController::class, 'index']);
     Route::get('/mitra/transaksi', [MitraController::class, 'transaksiini']);
     Route::get('/mitra/transaksimonth', [MitraController::class, 'transaksimonth']);
@@ -74,7 +76,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/accounting/exportTransaksi', [AccountingController::class, 'exportTransaksi']);
     Route::get('/accounting/exportTransaksiDetail', [AccountingController::class, 'exportDetailTransaksi']);
     Route::get('/accounting/monthReport', [AccountingController::class, 'monthReport']);
-    Route::patch('/account/{id}/resetPassword', [AccountController::class,'resetPassword']);
+    Route::patch('/account/{id}/resetPassword', [AccountController::class, 'resetPassword']);
+    Route::patch('/validateTransaction', [TransaksiController::class, 'validateTran']);
+    Route::delete('/deletePendingTransaction', [TransaksiController::class, 'deletePendingTran']);
     Route::Resource('/transaksi', TransaksiController::class);
     Route::Resource('/account', AccountController::class);
     Route::Resource('/kelolabank', KelolabankController::class);

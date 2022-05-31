@@ -24,9 +24,9 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
-        $transactiontoday = Transaction::where('tanggal', date('Y-m-d'))->count();
-        $transactionmount = Transaction::whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
+        $transaction = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->get();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->count();
+        $transactionmount = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
         $transactionbank = Bank::all()->count();
         $transactionbiller = Billers::all()->count();
 
@@ -36,10 +36,10 @@ class TransaksiController extends Controller
         $tanggal = [];
         for ($i = 1; $i <= $lastDay; $i++) {
             $tanggal[] = $i;
-            $pln[] = Transaction::whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
+            $pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
             })->count();
-            $non_pln[] = Transaction::whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
+            $non_pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
@@ -120,7 +120,7 @@ class TransaksiController extends Controller
         $produk = Produk::all()->sortBy('nama_produk');
 
         if (count($request->all()) > 0) {
-            $transaction = Transaction::all();
+            $transaction = Transaction::Valid()->get();
             if (!empty($request->tanggalawal)) {
                 if (empty($request->tanggalakhir)) {
                     $request['tanggalakhir'] = $request->tanggalawal;
@@ -140,20 +140,21 @@ class TransaksiController extends Controller
                 $transaction = $transaction->where('produk_id', $request->produk);
             }
         } else {
-            $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
+            $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
         return view('transaksi.filter', compact('bank', 'mitra', 'produk', 'transaction'));
     }
 
     public function transactiontoday()
     {
-        $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
-        return view('transaksi.transactiontoday', ['transaction' => $transaction]);
+        $transactionPending = Transaction::NotValid()->whereDate('created_at', date('Y-m-d'))->get();
+        $transactionFix = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->get();
+        return view('transaksi.transactiontoday', ['transactionPending' => $transactionPending, 'transactionFix' => $transactionFix]);
     }
 
     public function transactionmonth()
     {
-        $transaction = Transaction::whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
+        $transaction = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
         return view('transaksi.transactionmonth', ['transaction' => $transaction]);
     }
 
@@ -168,7 +169,7 @@ class TransaksiController extends Controller
     public function listtransaksiplnmonth()
     {
         $bankmonth = Bank::with(['transaction' => function ($query) {
-            $query->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
+            $query->Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
         }])->get();
 
         return view('transaksi.listtransaksiplnmonth', ['bankmonth' => $bankmonth]);
@@ -184,7 +185,7 @@ class TransaksiController extends Controller
     public function listtransaksinonplnmonth()
     {
         $billermonth = Billers::with(['transactionbiller' => function ($query) {
-            $query->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
+            $query->Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
         }])->get();
 
         return view('transaksi.listtransaksinonplnmonth', ['billermonth' => $billermonth]);
@@ -193,34 +194,34 @@ class TransaksiController extends Controller
     public function detailmitra($kode)
     {
         $bank = Bank::where('kode_bank', $kode)->first();
-        $trans = Transaction::where('bank_id', $kode)->where('tanggal', date('Y-m-d'))->get();
+        $trans = Transaction::Valid()->where('bank_id', $kode)->whereDate('created_at', date('Y-m-d'))->get();
         return view('transaksi.detailmitra', ['trans' => $trans, 'bank' => $bank]);
     }
 
     public function detailmitramonth($kode)
     {
         $bank = Bank::where('kode_bank', $kode)->first();
-        $trans = Transaction::where('bank_id', $kode)->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
+        $trans = Transaction::Valid()->where('bank_id', $kode)->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
         return view('transaksi.detailmitramonth', ['trans' => $trans, 'bank' => $bank]);
     }
 
     public function detailbiller($kode)
     {
         $biller = Billers::where('kode_biller', $kode)->first();
-        $transbiller = Transaction::where('biller_id', $kode)->where('tanggal', date('Y-m-d'))->get();
+        $transbiller = Transaction::Valid()->where('biller_id', $kode)->whereDate('created_at', date('Y-m-d'))->get();
         return view('transaksi.detailbiller', ['transbiller' => $transbiller, 'biller' => $biller]);
     }
 
     public function detailbillermonth($kode)
     {
         $biller = Billers::where('kode_biller', $kode)->first();
-        $transbiller = Transaction::where('biller_id', $kode)->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
+        $transbiller = Transaction::Valid()->where('biller_id', $kode)->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->get();
         return view('transaksi.detailbillermonth', ['transbiller' => $transbiller, 'biller' => $biller]);
     }
 
     public function result($id)
     {
-        $report = \App\Models\Transaction::all();
+        $report = \App\Models\Transaction::Valid()->get();
 
         $categories = [];
 
@@ -238,7 +239,7 @@ class TransaksiController extends Controller
         $spreadsheet = IOFactory::load('excelTemplate/templateFilter.xlsx');
         $row = 7;
         if (count($request->all()) > 0) {
-            $transaction = Transaction::all();
+            $transaction = Transaction::Valid()->get();
             if (!empty($request->tanggalawal)) {
                 if (empty($request->tanggalakhir)) {
                     $request['tanggalakhir'] = $request->tanggalawal;
@@ -258,7 +259,7 @@ class TransaksiController extends Controller
                 $transaction = $transaction->where('produk_id', $request->produk);
             }
         } else {
-            $transaction = Transaction::where('tanggal', date('Y-m-d'))->get();
+            $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
 
         $jumlahpelanggan = 0;
@@ -312,7 +313,7 @@ class TransaksiController extends Controller
         $row = 9;
         $partner = 8;
         $no = 1;
-        $cid = Transaction::select('cid_id')->with('cid')->where('bank_id', $kd)->groupBy('cid_id')->get();
+        $cid = Transaction::Valid()->select('cid_id')->with('cid')->where('bank_id', $kd)->groupBy('cid_id')->get();
         $aggregator = [];
         $nonAggregator = [];
         foreach ($cid as $data) {
@@ -326,7 +327,7 @@ class TransaksiController extends Controller
 
         foreach ($nonAggregator as $data) {
 
-            $produks = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('cid_id', $data->cid_id)->where('tanggal', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->get();
+            $produks = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('is_valid', 1)->where('cid_id', $data->cid_id)->whereDate('created_at', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->get();
 
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$partner}", "{$data->cid->nama_cid}");
 
@@ -368,7 +369,7 @@ class TransaksiController extends Controller
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$rowAggregator}", "Aggregator");
             foreach ($produk as $data) {
                 $rowAggregator++;
-                $produkAggregator = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->whereIn('cid_id', $cid_id)->where('produk_id', $data)->where('tanggal', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->first();
+                $produkAggregator = DB::table('transaction')->select('produk_id', 'tanggal', DB::raw('sum(rekening) as pelanggan'), DB::raw('sum(bulan) as lembar'), DB::raw('sum(rptag) as tagihan'), DB::raw('sum(rpadm) as admin'), DB::raw('sum(total) as total'))->where('is_valid', 1)->whereIn('cid_id', $cid_id)->where('produk_id', $data)->whereDate('created_at', date('Y-m-d'))->groupBy('produk_id', 'tanggal')->first();
                 if (!empty($produkAggregator)) {
                     $namaProduk = Produk::select('nama_produk')->where('kode_produk', $produkAggregator->produk_id)->first();
                     $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$rowAggregator}", "{$namaProduk->nama_produk}");
@@ -406,5 +407,21 @@ class TransaksiController extends Controller
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header("Content-Disposition: attachment; filename=Report Transaksi Bank BNI_" . date('Ymdhis') . ".xls");
         $writer->save('php://output');
+    }
+
+    public function validateTran()
+    {
+        $transaction = Transaction::NotValid()->whereDate('created_at', date('Y-m-d'))->update([
+            'is_valid' => 1
+        ]);
+        toast('Data Berhasil Divalidasi', 'success');
+        return back();
+    }
+
+    public function deletePendingTran()
+    {
+        $transaction = Transaction::NotValid()->whereDate('created_at', date('Y-m-d'))->delete();
+        toast('Data Berhasil Dihapus', 'success');
+        return back();
     }
 }

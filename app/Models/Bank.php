@@ -21,8 +21,14 @@ class Bank extends Model
     //     return $this->hasOne(DataMitra::class, 'bank_id');
     // }
 
-    public function user(){
-        return $this->belongsTo(User::class,'user_id');
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function Mitra()
+    {
+        return $this->hasMany(Cid::class, 'bank_id');
     }
 
     use HasFactory;

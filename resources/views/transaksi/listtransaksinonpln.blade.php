@@ -49,7 +49,7 @@
                                             {{-- <img src="{{ asset('/assets/img/' . $billers->filegambar) }}" alt=""> --}}
                                         </div>
                                         <div class="ps-3">
-                                            <h6>{{ $billers->transactionbiller->where('tanggal', date('Y-m-d'))->count() }}
+                                            <h6>{{ $billers->transactionbiller()->whereDate('created_at', date('Y-m-d'))->count() }}
                                             </h6>
                                             <span class="text-muted small pt-2 ps-1">Transaksi</span>
 

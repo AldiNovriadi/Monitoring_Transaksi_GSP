@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    use HasFactory;
     protected $table = "transaction";
 
     protected $fillable = [
@@ -21,7 +22,8 @@ class Transaction extends Model
         'bulan',
         'rptag',
         'rpadm',
-        'total'
+        'total',
+        'is_valid'
     ];
 
     public function bank()
@@ -48,5 +50,15 @@ class Transaction extends Model
     {
         return $this->belongsTo(Produk::class, 'produk_id', 'kode_produk');
     }
-    use HasFactory;
+
+
+    public function scopeValid($query)
+    {
+        return $query->where('is_valid', 1);
+    }
+
+    public function scopeNotValid($query)
+    {
+        return $query->where('is_valid', 0);
+    }
 }
