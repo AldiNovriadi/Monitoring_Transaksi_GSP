@@ -118,6 +118,7 @@ class TransaksiController extends Controller
         $bank = Bank::all()->sortBy('nama_bank');
         $mitra = Cid::all()->sortBy('nama_cid');
         $produk = Produk::all()->sortBy('nama_produk');
+        $data[] = null;
 
         if (count($request->all()) > 0) {
             $transaction = Transaction::Valid()->get();
@@ -129,10 +130,13 @@ class TransaksiController extends Controller
             }
 
             if (!empty($request->bank)) {
+                $select_bank = Bank::where('kode_bank', $request->bank)->first();
+                $data['list_mitra'] = Cid::where('bank_id', $select_bank->id)->get();
                 $transaction = $transaction->where('bank_id', $request->bank);
             }
 
             if (!empty($request->mitra)) {
+                $data['list_produk'] = Transaction::with('produk')->select('produk_id')->where('cid_id', $request->mitra)->groupBy('produk_id')->get();
                 $transaction = $transaction->where('cid_id', $request->mitra);
             }
 
@@ -142,7 +146,7 @@ class TransaksiController extends Controller
         } else {
             $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
-        return view('transaksi.filter', compact('bank', 'mitra', 'produk', 'transaction'));
+        return view('transaksi.filter', compact('bank', 'mitra', 'produk', 'transaction'))->with($data);
     }
 
     public function transactiontoday()

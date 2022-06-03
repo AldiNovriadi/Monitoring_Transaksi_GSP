@@ -40,7 +40,7 @@ Filtering Transaksi
                                 <div class="row">
                                     <div class="col-md-6">
                                         <span class="text-secondary">Bank</span>
-                                        <select name="bank" class="form-select" aria-label=" Default select example" id="selectBank">
+                                        <select name="bank" class="form-select" aria-label=" Default select example" id="selectBank" value="{{ Request::get('bank') }}">
                                             <option selected value=''>-- Pilih Bank --</option>
                                             @foreach ($bank as $banks)
                                             <option value="{{ $banks->kode_bank }}" {{ $banks->kode_bank == Request::get('bank') ? 'selected' : '' }}>
@@ -50,28 +50,31 @@ Filtering Transaksi
                                         </select> </br>
                                     </div>
 
-
                                     <div class="col-md-6">
                                         <span class="text-secondary">Mitra</span>
-                                        <select name="mitra" class="form-select" aria-label="Default select example" id="selectMitra" disabled>
+                                        <select name="mitra" class="form-select" aria-label="Default select example" id="selectMitra">
                                             <option selected value=''>-- Pilih Mitra --</option>
-                                            <!-- @foreach ($mitra as $mitras)
-                                                    <option value="{{ $mitras->kode_cid }}"
-                                                        {{ $mitras->kode_cid == Request::get('mitra') ? 'selected' : '' }}>
-                                                        {{ $mitras->nama_cid }}
-                                                    </option>
-                                                @endforeach -->
+                                            @if(!empty($list_mitra))
+                                            @foreach ($list_mitra as $mitra)
+                                            <option value="{{ $mitra->kode_cid }}" class="mitraOption" {{ $mitra->kode_cid == Request::get('mitra') ? 'selected' : '' }}>
+                                                {{ $mitra->nama_cid }}
+                                            </option>
+                                            @endforeach
+                                            @endif
                                         </select> </br>
                                     </div>
                                     <div class="col-md-6">
                                         <span class="text-secondary">Produk</span>
-                                        <select name="produk" class="form-select" id="selectProduk" aria-label="Default select example" disabled>
+                                        <select name="produk" class="form-select" id="selectProduk" aria-label="Default select example">
                                             <option selected value=''>-- Pilih Produk --</option>
-                                            <!-- @foreach ($produk as $produks)
-                                            <option value="{{ $produks->kode_produk }}" {{ $produks->kode_produk == Request::get('produk') ? 'selected' : '' }}>
-                                                {{ $produks->nama_produk }}
+                                            @if(!empty($list_produk))
+
+                                            @foreach ($list_produk as $produk)
+                                            <option value="{{ $produk->produk->kode_produk }}" class="produkOption" {{ $produk->produk->kode_produk == Request::get('produk') ? 'selected' : '' }}>
+                                                {{ $produk->produk->nama_produk }}
                                             </option>
-                                            @endforeach -->
+                                            @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -162,6 +165,7 @@ Filtering Transaksi
     });
 
     $(document).on('change', '#selectBank', function() {
+        $('.produkOption').remove();
         $('.mitraOption').remove();
         $.get('/bank/' + $(this).val() + '/getMitra', function(data) {
             $.each(data.mitra, function(index, value) {
