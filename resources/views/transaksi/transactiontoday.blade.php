@@ -71,9 +71,9 @@ Transaksi Hari Ini
                                 <td> {{ $transactions->bank->nama_bank }}</td>
                                 <td> {{ $transactions->rekening }}</td>
                                 <td> {{ $transactions->bulan }}</td>
-                                <td> Rp. {{ number_format($transactions->rptag) }}</td>
-                                <td> Rp. {{ number_format($transactions->rpadm) }}</td>
-                                <td> Rp. {{ number_format($transactions->total) }}</td>
+                                <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
+                                <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
+                                <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -109,15 +109,15 @@ Transaksi Hari Ini
                                 <tr>
                                     <td class="text-center"> <?php echo $no++; ?> </td>
                                     <td> {{ $transactions->tanggal }} </td>
-                                    <td> {{ $transactions->cid->nama_cid }} </td>
                                     <td> {{ $transactions->kd->nama_kd }}</td>
+                                    <td> {{ $transactions->cid->nama_cid }} </td>
                                     <td> {{ $transactions->produk->nama_produk }}</td>
                                     <td> {{ $transactions->bank->nama_bank }}</td>
                                     <td> {{ $transactions->rekening }}</td>
                                     <td> {{ $transactions->bulan }}</td>
-                                    <td> Rp. {{ number_format($transactions->rptag) }}</td>
-                                    <td> Rp. {{ number_format($transactions->rpadm) }}</td>
-                                    <td> Rp. {{ number_format($transactions->total) }}</td>
+                                    <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
+                                    <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
+                                    <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

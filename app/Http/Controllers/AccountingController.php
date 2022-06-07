@@ -19,8 +19,8 @@ class AccountingController extends Controller
     public function index()
     {
         $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
-        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->count();
-        $transactionmount = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->sum("bulan");
+        $transactionmount = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->sum("rptag");
 
         $lastDay = date('d', strtotime(Carbon::now()->endOfMonth()->toDateString()));
         $pln = [];
@@ -30,7 +30,7 @@ class AccountingController extends Controller
             $tanggal[] = $i;
             $pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
-            })->count();
+            })->sum("bulan");
             $non_pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
@@ -78,7 +78,7 @@ class AccountingController extends Controller
             $bankmonths[] = [
                 'kd_bulan' => $month[0],
                 'bulan' => $month[1],
-                'jumlah' => Transaction::Valid()->whereMonth('tanggal', $month[0])->whereYear('tanggal', date('Y'))->count()
+                'jumlah' => Transaction::Valid()->whereMonth('tanggal', $month[0])->whereYear('tanggal', date('Y'))->sum("bulan")
             ];
         }
         return view('accounting.laporan', compact('bankmonths'));

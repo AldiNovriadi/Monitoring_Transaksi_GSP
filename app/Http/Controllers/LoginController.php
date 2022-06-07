@@ -75,7 +75,7 @@ class LoginController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email:dns',
+            'email' => 'required',
             'password' => 'required|min:8',
             'cpassword' => 'required|min:8'
         ]);
@@ -85,14 +85,14 @@ class LoginController extends Controller
             return back();
         }
 
-        $user = User::where('email', $request->email)->where('name',$request->name)->first();
+        $user = User::where('email', $request->email)->where('name', $request->name)->first();
         if (empty($user) || $user->is_aktif == 1) {
             toast('Data Akun Tidak Ditemukan', 'error');
             return back();
         }
 
         $user->update([
-            'is_aktif'=>1,
+            'is_aktif' => 1,
             'password' => hash::make($request->get('password'))
         ]);
 
@@ -100,26 +100,28 @@ class LoginController extends Controller
         return redirect('/login');
     }
 
-    public function forgetPassword(){
+    public function forgetPassword()
+    {
         return view('login.forgetPassword');
     }
 
-    public function storeForgetPassword(Request $request){
+    public function storeForgetPassword(Request $request)
+    {
         $request->validate([
-            'email'=>'required'
+            'email' => 'required'
         ]);
 
-        $check = User::where('email',$request->email)->where('is_aktif',1)->first();
-        if(empty($check)){
-            toast('Email Tidak ditemukan','error');
+        $check = User::where('email', $request->email)->where('is_aktif', 1)->first();
+        if (empty($check)) {
+            toast('Email Tidak ditemukan', 'error');
             return back();
         }
 
         $check->update([
-            'is_forget_password'=>1
+            'is_forget_password' => 1
         ]);
 
-        alert()->success('Success','Pengajuan Reset Password Berhasil! Silahkan Tunggu Konfirmasi dari Admin');
+        alert()->success('Success', 'Pengajuan Reset Password Berhasil! Silahkan Tunggu Konfirmasi dari Admin');
         return back();
     }
 

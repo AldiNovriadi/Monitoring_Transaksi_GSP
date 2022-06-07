@@ -25,10 +25,10 @@ class TransaksiController extends Controller
     public function index()
     {
         $transaction = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->get();
-        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->count();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->sum('bulan');
         $transactionmount = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->count();
         $transactionbank = Bank::all()->count();
-        $transactionbiller = Billers::all()->count();
+        $transactionRupiah = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->sum('rptag');
 
         $lastDay = date('d', strtotime(Carbon::now()->endOfMonth()->toDateString()));
         $pln = [];
@@ -38,13 +38,13 @@ class TransaksiController extends Controller
             $tanggal[] = $i;
             $pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
-            })->count();
+            })->sum('bulan');
             $non_pln[] = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
 
-        return view('transaksi.index', ['transaction' => $transaction, 'transactiontoday' => $transactiontoday, 'transactionmount' => $transactionmount, 'transactionbank' => $transactionbank, 'transactionbiller' => $transactionbiller])
+        return view('transaksi.index', ['transaction' => $transaction, 'transactiontoday' => $transactiontoday, 'transactionmount' => $transactionmount, 'transactionbank' => $transactionbank, 'transactionRupiah' => $transactionRupiah])
             ->with(['tanggal' => json_encode($tanggal, JSON_NUMERIC_CHECK), 'pln' => json_encode($pln, JSON_NUMERIC_CHECK), 'non_pln' => json_encode($non_pln, JSON_NUMERIC_CHECK)]);
     }
 

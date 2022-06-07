@@ -24,16 +24,35 @@
             <div class="col-lg-12">
                 <div class="row">
                     <!-- Sales Card -->
-                    <div class="col-xxl-4 col-md-4">
+
+                    <div class="col-xxl-6 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <a href="/transaksi/listtransaksinonpln">
+                                    <h5 class="card-title">Rupiah Tagihan <span>| Hari Ini</span></h5>
+                                </a>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cursor-fill"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>Rp {{ number_format($transactionRupiah, 0, '', '.') }}</h6>
+                                        <span class="text-muted small pt-2 ps-1">Rupiah Tagihan</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Sales Card -->
+
+                    <div class="col-xxl-3 col-md-3">
                         <div class="card info-card sales-card">
 
                             <div class="filter">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i
                                         class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
 
                                     <li><a class="dropdown-item" href="/transaksi/month">Bulan ini</a></li>
                                 </ul>
@@ -46,10 +65,10 @@
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-currency-dollar"></i>
+                                        <i class="bi bi-reception-4"></i>
                                     </div>
                                     <div class=" ps-3">
-                                        <h6>{{ $transactiontoday }}</h6>
+                                        <h6>{{ number_format($transactiontoday, 0, '', '.') }}</h6>
                                         <span class="text-muted small pt-2 ps-1">Transaksi</span>
 
                                     </div>
@@ -60,19 +79,18 @@
                     </div><!-- End Sales Card -->
 
                     <!-- Sales Card -->
-                    <div class="col-xxl-4 col-md-4">
+                    <div class="col-xxl-3 col-md-3">
                         <div class="card info-card sales-card">
 
                             <div class="filter">
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i
                                         class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
+
 
                                     <li><a class="dropdown-item" href="/kelolabank">Data Bank</a></li>
-
+                                    <li><a class="dropdown-item" href="/kelolamitra"> Data Mitra</a></li>
+                                    {{-- <li><a class="dropdown-item" href="/kelolabiller">Data Biller</a></li> --}}
                                 </ul>
                             </div>
 
@@ -83,7 +101,7 @@
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
+                                        <i class="bi bi-people-fill"></i>
                                     </div>
                                     <div class="ps-3">
                                         <h6>{{ $transactionbank }}</h6>
@@ -96,40 +114,6 @@
                     </div><!-- End Sales Card -->
 
                     <!-- Sales Card -->
-                    <div class="col-xxl-4 col-md-4">
-                        <div class="card info-card sales-card">
-
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i
-                                        class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="/kelolamitra"> Data Mitra</a></li>
-                                    <li><a class="dropdown-item" href="/kelolabiller">Data Biller</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <a href="/transaksi/listtransaksinonpln">
-                                    <h5 class="card-title">Biller <span>| Mitra</span></h5>
-                                </a>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>{{ $transactionbiller }}</h6>
-                                        <span class="text-muted small pt-2 ps-1">Biller</span>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- End Sales Card -->
 
                 </div>
             </div>
@@ -152,16 +136,12 @@
                             <script>
                                 var tanggal = <?php echo $tanggal; ?>;
                                 var pln = <?php echo $pln; ?>;
-                                var non_pln = <?php echo $non_pln; ?>;
 
                                 document.addEventListener("DOMContentLoaded", () => {
                                     new ApexCharts(document.querySelector("#reportsChart"), {
                                         series: [{
                                             name: 'PLN',
                                             data: pln,
-                                        }, {
-                                            name: 'Non PLN',
-                                            data: non_pln
                                         }],
                                         chart: {
                                             height: 350,

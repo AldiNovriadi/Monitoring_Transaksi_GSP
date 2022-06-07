@@ -109,13 +109,13 @@
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">
-        @yield("content")
+        @yield('content')
     </main>
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
-            &copy; Copyright <strong><span>Aldi Novriadi</span></strong>. All Rights Reserved
+            2022 &copy; Copyright <strong><span>PT. Gerbang Sinergi Prima</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
             <!-- All the links in the footer should remain intact. -->

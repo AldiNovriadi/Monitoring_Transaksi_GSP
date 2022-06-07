@@ -13,8 +13,9 @@ class BankController extends Controller
 {
     public function index()
     {
-        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->count();
-        $transactionMonth = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->count();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->sum("bulan");
+        // $transactionMonth = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->count();
+        $transactionRupiah = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->sum('rptag');
         $bank = Bank::with('transaction')->get();
         $bankmonth = Bank::with(['transaction' => function ($query) {
             $query->Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
@@ -28,13 +29,13 @@ class BankController extends Controller
             $tanggal[] = $i;
             $pln[] = Transaction::Valid()->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
-            })->count();
+            })->sum('bulan');
             $non_pln[] = Transaction::Valid()->where('bank_id', Bank::where('user_id', Auth::User()->id)->first()->kode_bank)->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
 
-        return view('bank.index', ['bank' => $bank, 'bankmonth' => $bankmonth, 'transactiontoday' => $transactiontoday, 'transactionMonth' => $transactionMonth])
+        return view('bank.index', ['bank' => $bank, 'bankmonth' => $bankmonth, 'transactiontoday' => $transactiontoday, 'transactionRupiah' => $transactionRupiah])
             ->with(['tanggal' => json_encode($tanggal, JSON_NUMERIC_CHECK), 'pln' => json_encode($pln, JSON_NUMERIC_CHECK), 'non_pln' => json_encode($non_pln, JSON_NUMERIC_CHECK)]);
     }
 

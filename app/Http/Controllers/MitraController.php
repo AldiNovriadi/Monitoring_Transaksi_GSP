@@ -16,9 +16,9 @@ class MitraController extends Controller
 {
     public function index()
     {
-
-        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->count();
-        $transactionMonth = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->count();
+        $transactiontoday = Transaction::Valid()->whereDate('created_at', date('Y-m-d'))->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->sum('bulan');
+        $transactionRupiah = Transaction::Valid()->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->sum('rptag');
+        $bank = Bank::with('transaction')->get();
 
         $lastDay = date('d', strtotime(Carbon::now()->endOfMonth()->toDateString()));
         $pln = [];
@@ -28,12 +28,12 @@ class MitraController extends Controller
             $tanggal[] = $i;
             $pln[] = Transaction::Valid()->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', 99501)->orWhere('produk_id', 99504)->orWhere('produk_id', 99502);
-            })->count();
+            })->sum('bulan');
             $non_pln[] = Transaction::Valid()->where('cid_id', Cid::where('user_id', Auth::User()->id)->first()->kode_cid)->whereMonth('tanggal', date('m'))->whereDay('tanggal', $i)->where(function ($query) {
                 $query->where('produk_id', '!=', 99501)->where('produk_id', '!=', 99504)->where('produk_id', '!=', 99502);
             })->count();
         }
-        return view('mitra.index', compact('transactiontoday', 'transactionMonth'))
+        return view('mitra.index', compact('transactiontoday', 'transactionRupiah'))
             ->with(['tanggal' => json_encode($tanggal, JSON_NUMERIC_CHECK), 'pln' => json_encode($pln, JSON_NUMERIC_CHECK), 'non_pln' => json_encode($non_pln, JSON_NUMERIC_CHECK)]);
     }
 
