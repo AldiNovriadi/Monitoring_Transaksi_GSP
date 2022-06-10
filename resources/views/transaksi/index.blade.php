@@ -60,7 +60,7 @@
 
                             <div class="card-body">
                                 <a href="/transaksi/today">
-                                    <h5 class="card-title">Transaksi <span>| Hari ini</span></h5>
+                                    <h5 class="card-title">Transaksi <span>| Hari Ini</span></h5>
                                 </a>
 
                                 <div class="d-flex align-items-center">

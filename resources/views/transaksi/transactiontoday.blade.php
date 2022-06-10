@@ -63,13 +63,102 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $totalPelanggan = 0;
+                                    $totalLembar = 0;
+                                    $totalRpTag = 0;
+                                    $totalRpAdmin = 0;
+                                    $totalRpTotal = 0;
+                                @endphp
                                 @foreach ($transactionPending as $transactions)
-                                    {{-- @dd($transaction); --}}
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
                                         <td> {{ $transactions->tanggal }} </td>
                                         <td> {{ $transactions->cid->nama_cid }} </td>
                                         <td> {{ $transactions->kd->nama_kd }}</td>
+                                        <td> {{ $transactions->produk->nama_produk }}</td>
+                                        <td> {{ $transactions->bank->nama_bank }}</td>
+                                        <td> {{ $transactions->rekening }}</td>
+                                        <td> {{ $transactions->bulan }}</td>
+                                        <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
+                                        <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
+                                        <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
+                                    </tr>
+                                    @php
+                                        $totalPelanggan += $transactions->rekening;
+                                        $totalLembar += $transactions->bulan;
+                                        $totalRpTag += $transactions->rptag;
+                                        $totalRpAdmin += $transactions->rpadm;
+                                        $totalRpTotal += $transactions->total;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Validasi</h5>
+                        <table id="example8" class="table table-striped table-bordered display nowrap" style="width:100%">
+                            <thead class="table-secondary">
+                                <tr class="text-center">
+                                    <th>Pelanggan</th>
+                                    <th>Lembar</th>
+                                    <th>Rupiah Tagihan</th>
+                                    <th>Rupiah Admin</th>
+                                    <th>Rupiah Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td> {{ number_format($totalPelanggan, 0, '', '.') }}</td>
+                                    <td> {{ number_format($totalLembar, 0, '', '.') }}</td>
+                                    <td> Rp {{ number_format($totalRpTag, 0, '', '.') }}</td>
+                                    <td> Rp {{ number_format($totalRpAdmin, 0, '', '.') }}</td>
+                                    <td> Rp {{ number_format($totalRpTotal, 0, '', '.') }}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Fix Transaction</h5>
+                        <table id="example2" class="table table-striped table-bordered display nowrap" style="width:100%">
+                            <thead class="table-secondary">
+                                <tr class="text-center">
+                                    <th width="5%"> No</th>
+                                    <th>Tanggal</th>
+                                    <th>Distribusi</th>
+                                    <th>Mitra</th>
+                                    <th>Produk</th>
+                                    <th>Bank</th>
+                                    <th>Pelanggan</th>
+                                    <th>Lembar</th>
+                                    <th>Rupiah Tagihan</th>
+                                    <th>Rupiah Admin</th>
+                                    <th>Rupiah Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($transactionFix as $transactions)
+                                    {{-- @dd($transaction); --}}
+                                    <tr>
+                                        <td class="text-center"> <?php echo $no++; ?> </td>
+                                        <td> {{ $transactions->tanggal }} </td>
+                                        <td> {{ $transactions->kd->nama_kd }}</td>
+                                        <td> {{ $transactions->cid->nama_cid }} </td>
                                         <td> {{ $transactions->produk->nama_produk }}</td>
                                         <td> {{ $transactions->bank->nama_bank }}</td>
                                         <td> {{ $transactions->rekening }}</td>
@@ -84,86 +173,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Validasi</h5>
-                            <table id="example2" class="table table-striped table-bordered display nowrap"
-                                style="width:100%">
-                                <thead class="table-secondary">
-                                    <tr class="text-center">
-                                        <th>Pelanggan</th>
-                                        <th>Lembar</th>
-                                        <th>Rupiah Tagihan</th>
-                                        <th>Rupiah Admin</th>
-                                        <th>Rupiah Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($transactionFix as $transactions)
-                                        {{-- @dd($transaction); --}}
-                                        <tr>
-                                            <td> {{ $transactions->rekening }}</td>
-                                            <td> {{ $transactions->bulan }}</td>
-                                            <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
-                                            <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
-                                            <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Fix Transaction</h5>
-                            <table id="example2" class="table table-striped table-bordered display nowrap"
-                                style="width:100%">
-                                <thead class="table-secondary">
-                                    <tr class="text-center">
-                                        <th width="5%"> No</th>
-                                        <th>Tanggal</th>
-                                        <th>Distribusi</th>
-                                        <th>Mitra</th>
-                                        <th>Produk</th>
-                                        <th>Bank</th>
-                                        <th>Pelanggan</th>
-                                        <th>Lembar</th>
-                                        <th>Rupiah Tagihan</th>
-                                        <th>Rupiah Admin</th>
-                                        <th>Rupiah Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($transactionFix as $transactions)
-                                        {{-- @dd($transaction); --}}
-                                        <tr>
-                                            <td class="text-center"> <?php echo $no++; ?> </td>
-                                            <td> {{ $transactions->tanggal }} </td>
-                                            <td> {{ $transactions->kd->nama_kd }}</td>
-                                            <td> {{ $transactions->cid->nama_cid }} </td>
-                                            <td> {{ $transactions->produk->nama_produk }}</td>
-                                            <td> {{ $transactions->bank->nama_bank }}</td>
-                                            <td> {{ $transactions->rekening }}</td>
-                                            <td> {{ $transactions->bulan }}</td>
-                                            <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
-                                            <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
-                                            <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
     </section>
 
     <div class="modal fade" id="modalValidate" tabindex="-1">
