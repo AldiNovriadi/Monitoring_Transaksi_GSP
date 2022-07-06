@@ -1,18 +1,18 @@
 @extends('account.layout')
 
 @section('title')
-    Data Akun
+    Edit Data Akun
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Edit Akun Mitra</h1>
+        <h1>Edit Data Akun</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Edit Akun Mitra</li>
+                <li class="breadcrumb-item active">Edit Data Akun</li>
             </ol>
         </nav>
     </div>
@@ -22,7 +22,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Edit Akun Mitra</h5>
+                        <h5 class="card-title">Edit Data Akun</h5>
                         <form class="row g-3" method="post" action="/account/{{ $account->id }}">
                             @csrf
                             @method('PUT')

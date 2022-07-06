@@ -23,7 +23,8 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#pln-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>Transaksi PLN</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-layout-text-window-reverse"></i><span>Transaksi</span><i
+            class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="pln-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -39,8 +40,7 @@
     </ul>
 </li><!-- End Tables Nav -->
 
-
-<li class="nav-item">
+{{-- <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#nonpln-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>Transaksi Non PLN</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
@@ -56,7 +56,7 @@
             </a>
         </li>
     </ul>
-</li><!-- End Tables Nav -->
+</li><!-- End Tables Nav --> --}}
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">

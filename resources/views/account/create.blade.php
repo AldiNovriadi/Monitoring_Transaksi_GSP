@@ -1,18 +1,18 @@
 @extends('account.layout')
 
 @section('title')
-    Data Akun
+    Tambah Data Akun
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Tambah Akun Mitra</h1>
+        <h1>Tambah Data Akun</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Tambah Akun Mitra</li>
+                <li class="breadcrumb-item active">Tambah Data Akun</li>
             </ol>
         </nav>
     </div>
@@ -22,7 +22,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Tambah Akun Mitra</h5>
+                        <h5 class="card-title">Tambah Data Akun</h5>
                         <form class="row g-3" method="post" action="/account">
                             @csrf
                             <div class="col-lg-12">

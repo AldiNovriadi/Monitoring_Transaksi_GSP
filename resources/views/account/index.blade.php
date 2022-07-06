@@ -1,18 +1,18 @@
 @extends('account.layout')
 
 @section('title')
-Data Akun
+Kelola Data Akun
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
 @include('sweetalert::alert')
 <div class="pagetitle">
-    <h1>Data Akun</h1>
+    <h1>Kelola Data Akun</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-            <li class="breadcrumb-item active">Data Akun</li>
+            <li class="breadcrumb-item active">Kelola Data Akun</li>
         </ol>
     </nav>
 </div>
@@ -22,7 +22,7 @@ Data Akun
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Data Akun Mitra</h5>
+                    <h5 class="card-title">Kelola Data Akun</h5>
                     <p><a href="/account/create"> <button id="addRow" type="submit" class="btn btn-primary ">Tambah Data
                                 Akun
                             </button></a> </p>
@@ -51,11 +51,7 @@ Data Akun
 
                                     @endif
                                     @if(Auth::User()->id != $accounts->id)
-                                    <form action="/account/{{ $accounts->id }}" method="post" style="display: inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit"> <i class="bx bxs-trash"></i></button>
-                                    </form>
+                                    <button class="btn btn-danger btnDelete" type="button" data-id="{{ $accounts->id }}"> <i class="bx bxs-trash"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -79,13 +75,35 @@ Data Akun
             <form method="post" id="formReset">
                 @csrf
                 @method('PATCH')
-            <div class="modal-body">
-               Dengan ini, Password Akun akan direset menjadi Password Deault, Lanjutkan?
+                <div class="modal-body">
+                    Dengan ini, Password Akun akan direset menjadi Password Deault, Lanjutkan?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Ya</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- End Basic Modal-->
+
+<div class="modal fade" id="modalDelete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Akun</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Ya</button>
-            </div>
+            <form method="post" id="formDelete">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    Dengan ini, Akun yang dipilih akan dihapus, Lanjutkan?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Ya</button>
+                </div>
             </form>
         </div>
     </div>
@@ -103,12 +121,21 @@ Data Akun
     });
 
     $(document).on('click', '.btnResetPassword', function() {
-        $('#formReset').prop('action','/account/'+$(this).attr('data-id')+'/resetPassword');
+        $('#formReset').prop('action', '/account/' + $(this).attr('data-id') + '/resetPassword');
         $('#modalReset').modal('show');
     });
 
-    $('#modalReset').on('hidden.bs.modal',function(){
+    $('#modalReset').on('hidden.bs.modal', function() {
         $('#formReset').removeAttr('action');
+    })
+
+    $(document).on('click', '.btnDelete', function() {
+        $('#formDelete').prop('action', '/account/' + $(this).attr('data-id'));
+        $('#modalDelete').modal('show');
+    });
+
+    $('#modalReset').on('hidden.bs.modal', function() {
+        $('#formDelete').removeAttr('action');
     })
 </script>
 @endsection

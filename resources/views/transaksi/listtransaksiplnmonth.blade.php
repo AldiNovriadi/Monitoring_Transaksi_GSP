@@ -1,17 +1,17 @@
 @extends('transaksi.layout')
 
 @section('title')
-    Transaksi PLN
+    Transaksi Bulan Ini
 @endsection
 
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Transaksi PLN</h1>
+        <h1>Transaksi Bulan Ini</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Dashboard</a></li>
-                <li class="breadcrumb-item active">Transaksi PLN</li>
+                <li class="breadcrumb-item active">Transaksi Bulan Ini</li>
             </ol>
         </nav>
     </div>

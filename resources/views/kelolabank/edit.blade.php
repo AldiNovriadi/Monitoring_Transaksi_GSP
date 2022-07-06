@@ -1,18 +1,18 @@
 @extends('kelolabank.layout')
 
 @section('title')
-    Data Akun Bank
+   Edit Data Bank
 @endsection
 
 <?php $no = 1; ?>
 @section('content')
     @include('sweetalert::alert')
     <div class="pagetitle">
-        <h1>Edit Data Akun Bank</h1>
+        <h1>Edit Data Bank</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/transaksi">Home</a></li>
-                <li class="breadcrumb-item active">Edit Data Akun Bank</li>
+                <li class="breadcrumb-item active">Edit Data Bank</li>
             </ol>
         </nav>
     </div>
@@ -23,7 +23,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Edit Data Akun Bank</h5>
+                        <h5 class="card-title">Edit Data Bank</h5>
                         <form class="row g-3" method="post" action="/kelolabank/{{ $bank->id }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
