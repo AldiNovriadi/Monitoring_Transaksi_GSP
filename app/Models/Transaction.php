@@ -15,7 +15,7 @@ class Transaction extends Model
         'tanggal',
         'cid_id',
         'kd_id',
-        'biller_id',
+        // 'biller_id',
         'produk_id',
         'bank_id',
         'rekening',
@@ -31,10 +31,10 @@ class Transaction extends Model
         return $this->belongsTo(Bank::class, 'bank_id', 'kode_bank');
     }
 
-    public function biller()
-    {
-        return $this->belongsTo(Billers::class, 'biller_id', 'kode_biller');
-    }
+    // public function biller()
+    // {
+    //     return $this->belongsTo(Billers::class, 'biller_id', 'kode_biller');
+    // }
 
     public function kd()
     {

@@ -32,7 +32,6 @@
                                     <th>Mitra</th>
                                     <th>Produk</th>
                                     <th>Lembar</th>
-                                    <th>Fee GSP</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,7 +44,6 @@
                                         <td> {{ \App\Models\Produk::where('kode_produk', $transactions->produk_id)->first()->nama_produk }}
                                         </td>
                                         <td> {{ $transactions->lembar }}</td>
-                                        <td> Rp. {{ number_format($transactions->tagihan) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

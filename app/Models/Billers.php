@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Billers extends Model
 {
-    protected $table = 'biller';
-    protected $fillable = ['kode_biller', 'nama_biller'];
+    // protected $table = 'biller';
+    // protected $fillable = ['kode_biller', 'nama_biller'];
 
-    public function transactionbiller()
-    {
-        return $this->hasMany(Transaction::class, 'biller_id', 'kode_biller');
-    }
+    // public function transactionbiller()
+    // {
+    //     return $this->hasMany(Transaction::class, 'biller_id', 'kode_biller');
+    // }
 
-    use HasFactory;
+    // use HasFactory;
 }

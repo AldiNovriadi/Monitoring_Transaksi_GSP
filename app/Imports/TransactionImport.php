@@ -18,14 +18,14 @@ class TransactionImport implements ToModel
             'tanggal'        => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
             'cid_id'       => $row[1],
             'kd_id'        => $row[2],
-            'biller_id'     => $row[3],
-            'produk_id'    => $row[4],
-            'bank_id'      => $row[5],
-            'rekening'  => $row[6],
-            'bulan'     => $row[7],
-            'rptag'     => $row[8],
-            'rpadm'     => $row[9],
-            'total'     => $row[10],
+            // 'biller_id'     => $row[3],
+            'produk_id'    => $row[3],
+            'bank_id'      => $row[4],
+            'rekening'  => $row[5],
+            'bulan'     => $row[6],
+            'rptag'     => $row[7],
+            'rpadm'     => $row[8],
+            'total'     => $row[9],
         ]);
     }
 }

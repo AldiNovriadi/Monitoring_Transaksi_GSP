@@ -13,9 +13,9 @@ class AddBillerToTransactionTable extends Migration
      */
     public function up()
     {
-        Schema::table('transaction', function (Blueprint $table) {
-            $table->bigInteger('biller_id')->unsigned();
-        });
+        // Schema::table('transaction', function (Blueprint $table) {
+        //     $table->bigInteger('biller_id')->unsigned();
+        // });
     }
 
     /**
@@ -25,8 +25,8 @@ class AddBillerToTransactionTable extends Migration
      */
     public function down()
     {
-        Schema::table('transaction', function (Blueprint $table) {
-            $table->dropColumn('biller_id');
-        });
+        // Schema::table('transaction', function (Blueprint $table) {
+        //     $table->dropColumn('biller_id');
+        // });
     }
 }

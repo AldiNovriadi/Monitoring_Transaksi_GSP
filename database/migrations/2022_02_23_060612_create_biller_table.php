@@ -13,12 +13,12 @@ class CreateBillerTable extends Migration
      */
     public function up()
     {
-        Schema::create('biller', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('kode_biller')->unique();
-            $table->string('nama_biller');
-        });
+        // Schema::create('biller', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->timestamps();
+        //     $table->string('kode_biller')->unique();
+        //     $table->string('nama_biller');
+        // });
     }
 
     /**
