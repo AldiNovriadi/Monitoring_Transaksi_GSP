@@ -16,7 +16,7 @@
     <li class="nav-item">
         <a class="nav-link " href="/mitra/transaksimonth">
             <i class="bi bi-layout-text-window-reverse"></i>
-            <span>Transaksi Per Bulan</span>
+            <span>Transaksi Bulan Ini</span>
         </a>
     </li><!-- End Dashboard Nav -->
 @endsection

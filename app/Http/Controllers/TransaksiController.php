@@ -11,9 +11,12 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Middleware\Mitra;
 use PhpParser\Node\Expr\Empty_;
+use App\Imports\TransactionImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Validator;
 
 class TransaksiController extends Controller
 {
@@ -426,6 +429,21 @@ class TransaksiController extends Controller
     {
         $transaction = Transaction::NotValid()->whereDate('created_at', date('Y-m-d'))->delete();
         toast('Data Berhasil Dihapus', 'success');
+        return back();
+    }
+
+    public function TransactionImportFile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlx,xls,xlsx|size:2048'
+        ]);
+        // $request->validate([
+        //     'file' => 'required|mimes:xlx,xls,xlsx|max:2048|mimeType:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        // ]);
+
+
+        // dd($request->file);
+        Excel::import(new TransactionImport, request()->file('file'));
         return back();
     }
 }

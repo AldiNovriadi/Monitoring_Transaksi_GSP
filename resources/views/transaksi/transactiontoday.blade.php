@@ -40,12 +40,8 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Pending Transaction</h5>
-                        <button class="btn btn-primary" id="btnValidate"
-                            {{ count($transactionPending) < 1 ? 'disabled' : '' }}>Validate</button>
-                        <button class="btn btn-danger" id="btnHapus"
-                            {{ count($transactionPending) < 1 ? 'disabled' : '' }}>Hapus Data</button>
-                        <br><br>
+                        <h5 class="card-title">Hasil Import Transaksi</h5>
+                        
                         <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
@@ -104,6 +100,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Validasi</h5>
+                        <button class="btn btn-primary" id="btnValidate"
+                            {{ count($transactionPending) < 1 ? 'disabled' : '' }}>Konfirmasi</button>
+                        <button class="btn btn-danger" id="btnHapus"
+                            {{ count($transactionPending) < 1 ? 'disabled' : '' }}>Hapus Data</button>
+                        <br><br>
                         <table id="example8" class="table table-striped table-bordered display nowrap" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
@@ -134,7 +135,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Fix Transaction</h5>
+                        <h5 class="card-title">Final Transaksi</h5>
                         <table id="example2" class="table table-striped table-bordered display nowrap" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">

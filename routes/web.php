@@ -38,11 +38,7 @@ Route::get('/', function () {
 // Route::get('/admin', 'AdminController@index')->name('admin')->middleware('admin');
 // Route::get('/mitra', 'MitraController@index')->name('mitra')->middleware('mitra');
 
-Route::post('/importTransaksi', function () {
-    Excel::import(new TransactionImport, request()->file('file'));
-    return back();
-});
-
+Route::post('/importTransaksi', [TransaksiController::class, 'TransactionImportFile']);
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::get('/register', [LoginController::class, 'register']);
 Route::post('/register', [LoginController::class, 'actionregis']);
