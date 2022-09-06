@@ -47,8 +47,8 @@ Data Mitra
                                     <br>
                                 </div>
                                 
-                                <span class="text-secondary">File Template Excel </span>
-                                <input class="form-control" name="filtetemplate" type="file" id="formFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </br>
+                                {{-- <span class="text-secondary">File Template Excel </span>
+                                <input class="form-control" name="filtetemplate" type="file" id="formFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </br> --}}
 
                             </div>
                         </div>
