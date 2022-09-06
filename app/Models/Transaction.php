@@ -23,7 +23,9 @@ class Transaction extends Model
         'rptag',
         'rpadm',
         'total',
-        'is_valid'
+        'is_valid',
+        'created_by',
+        'validation_by',
     ];
 
     public function bank()
@@ -60,5 +62,15 @@ class Transaction extends Model
     public function scopeNotValid($query)
     {
         return $query->where('is_valid', 0);
+    }
+
+    public function getCreatedBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function getValidateBy()
+    {
+        return $this->belongsTo(User::class, 'validation_by');
     }
 }

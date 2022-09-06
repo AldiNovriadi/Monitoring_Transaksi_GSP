@@ -16,7 +16,7 @@
             </ol>
         </nav>
     </div>
-
+    @include('layouts.notif')
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
@@ -27,7 +27,8 @@
                             @csrf
                             <div class="input-group mb-3">
                                 <input type="file" name="file" class="form-control" placeholder="Recipient's username"
-                                    aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    aria-label="Recipient's username" aria-describedby="button-addon2"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                 <button class="btn btn-primary" type="submit" id="button-addon2">Import</button>
                             </div>
                         </form>
@@ -56,6 +57,7 @@
                                     <th>Rupiah Tagihan</th>
                                     <th>Rupiah Admin</th>
                                     <th>Rupiah Total</th>
+                                    <th>Diimport Oleh</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,15 +72,16 @@
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
                                         <td> {{ $transactions->tanggal }} </td>
-                                        <td> {{ $transactions->cid->nama_cid }} </td>
-                                        <td> {{ $transactions->kd->nama_kd }}</td>
-                                        <td> {{ $transactions->produk->nama_produk }}</td>
-                                        <td> {{ $transactions->bank->nama_bank }}</td>
+                                        <td> {{ @$transactions->cid->nama_cid }} </td>
+                                        <td> {{ @$transactions->kd->nama_kd }}</td>
+                                        <td> {{ @$transactions->produk->nama_produk }}</td>
+                                        <td> {{ @$transactions->bank->nama_bank }}</td>
                                         <td> {{ $transactions->rekening }}</td>
                                         <td> {{ $transactions->bulan }}</td>
                                         <td class="text-end"> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
                                         <td class="text-end"> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
                                         <td class="text-end"> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
+                                        <td>{{ @$transactions->getCreatedBy->name }}</td>
                                     </tr>
                                     @php
                                         $totalPelanggan += $transactions->rekening;
@@ -150,6 +153,8 @@
                                     <th>Rupiah Tagihan</th>
                                     <th>Rupiah Admin</th>
                                     <th>Rupiah Total</th>
+                                    <th>Diimport Oleh</th>
+                                    <th>Divalidasi Oleh</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,10 +163,10 @@
                                     <tr>
                                         <td class="text-center"> <?php echo $no++; ?> </td>
                                         <td> {{ $transactions->tanggal }} </td>
-                                        <td> {{ $transactions->kd->nama_kd }}</td>
-                                        <td> {{ $transactions->cid->nama_cid }} </td>
-                                        <td> {{ $transactions->produk->nama_produk }}</td>
-                                        <td> {{ $transactions->bank->nama_bank }}</td>
+                                        <td> {{ @$transactions->kd->nama_kd }}</td>
+                                        <td> {{ @$transactions->cid->nama_cid }} </td>
+                                        <td> {{ @$transactions->produk->nama_produk }}</td>
+                                        <td> {{ @$transactions->bank->nama_bank }}</td>
                                         <td> {{ $transactions->rekening }}</td>
                                         <td> {{ $transactions->bulan }}</td>
                                         <td class="text-end"> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}
@@ -170,6 +175,8 @@
                                         </td>
                                         <td class="text-end"> Rp. {{ number_format($transactions->total, 0, '', '.') }}
                                         </td>
+                                        <td>{{ @$transactions->getCreatedBy->name }}</td>
+                                        <td>{{ @$transactions->getValidateBy->name }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

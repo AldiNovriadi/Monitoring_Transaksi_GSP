@@ -419,7 +419,8 @@ class TransaksiController extends Controller
     public function validateTran()
     {
         $transaction = Transaction::NotValid()->whereDate('created_at', date('Y-m-d'))->update([
-            'is_valid' => 1
+            'is_valid' => 1,
+            'validation_by' => auth()->user()->id
         ]);
         toast('Data Berhasil Divalidasi', 'success');
         return back();
@@ -434,8 +435,8 @@ class TransaksiController extends Controller
 
     public function TransactionImportFile(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:xlx,xls,xlsx|size:2048'
+        $request->validate([
+            'file' => 'required|mimes:xlx,xls,xlsx|max:2048'
         ]);
         // $request->validate([
         //     'file' => 'required|mimes:xlx,xls,xlsx|max:2048|mimeType:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -444,6 +445,7 @@ class TransaksiController extends Controller
 
         // dd($request->file);
         Excel::import(new TransactionImport, request()->file('file'));
+        toast('File berhasil diimport', 'success');
         return back();
     }
 }
