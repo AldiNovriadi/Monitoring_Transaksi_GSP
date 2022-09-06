@@ -41,7 +41,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Hasil Import Transaksi</h5>
-                        
+
                         <table id="example" class="table table-striped table-bordered display nowrap" style="width:100%">
                             <thead class="table-secondary">
                                 <tr class="text-center">
@@ -76,9 +76,9 @@
                                         <td> {{ $transactions->bank->nama_bank }}</td>
                                         <td> {{ $transactions->rekening }}</td>
                                         <td> {{ $transactions->bulan }}</td>
-                                        <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
-                                        <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
-                                        <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
                                     </tr>
                                     @php
                                         $totalPelanggan += $transactions->rekening;
@@ -119,9 +119,9 @@
                                 <tr>
                                     <td> {{ number_format($totalPelanggan, 0, '', '.') }}</td>
                                     <td> {{ number_format($totalLembar, 0, '', '.') }}</td>
-                                    <td> Rp {{ number_format($totalRpTag, 0, '', '.') }}</td>
-                                    <td> Rp {{ number_format($totalRpAdmin, 0, '', '.') }}</td>
-                                    <td> Rp {{ number_format($totalRpTotal, 0, '', '.') }}</td>
+                                    <td class="text-end"> Rp {{ number_format($totalRpTag, 0, '', '.') }}</td>
+                                    <td class="text-end"> Rp {{ number_format($totalRpAdmin, 0, '', '.') }}</td>
+                                    <td class="text-end"> Rp {{ number_format($totalRpTotal, 0, '', '.') }}</td>
                                 </tr>
 
                             </tbody>
@@ -164,9 +164,12 @@
                                         <td> {{ $transactions->bank->nama_bank }}</td>
                                         <td> {{ $transactions->rekening }}</td>
                                         <td> {{ $transactions->bulan }}</td>
-                                        <td> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}</td>
-                                        <td> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}</td>
-                                        <td> Rp. {{ number_format($transactions->total, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->rptag, 0, '', '.') }}
+                                        </td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->rpadm, 0, '', '.') }}
+                                        </td>
+                                        <td class="text-end"> Rp. {{ number_format($transactions->total, 0, '', '.') }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
