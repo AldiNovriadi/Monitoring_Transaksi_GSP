@@ -53,9 +53,9 @@
                                         <td> {{ $transaction->bank->nama_bank }}</td>
                                         <td> {{ number_format($transaction->rekening, 0, '', '.') }}</td>
                                         <td> {{ number_format($transaction->bula, 0, '', '.') }}</td>
-                                        <td> Rp {{ number_format($transaction->rptag, 0, '', '.') }}</td>
-                                        <td> Rp {{ number_format($transaction->rpadm, 0, '', '.') }}</td>
-                                        <td> Rp {{ number_format($transaction->total, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp {{ number_format($transaction->rptag, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp {{ number_format($transaction->rpadm, 0, '', '.') }}</td>
+                                        <td class="text-end"> Rp {{ number_format($transaction->total, 0, '', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
