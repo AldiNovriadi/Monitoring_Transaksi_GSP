@@ -149,7 +149,11 @@ class AccountingController extends Controller
             $transaction = Transaction::Valid()->where('tanggal', date('Y-m-d'))->get();
         }
 
-        $jumlah = 0;
+        $jumlahpelanggan = 0;
+        $jumlahlembar = 0;
+        $jumlahrptag = 0;
+        $jumlahrpadm = 0;
+        $jumlahtotal = 0;
         foreach ($transaction as $trans) {
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("B{$row}", "{$trans->tanggal}");
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", $trans->cid->nama_cid);
@@ -162,12 +166,20 @@ class AccountingController extends Controller
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", $trans->rpadm);
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $trans->total);
             $row++;
-            $jumlah += $trans->total;
+            $jumlahpelanggan += $trans->rekening;
+            $jumlahlembar += $trans->bulan;
+            $jumlahrptag += $trans->rptag;
+            $jumlahrpadm += $trans->rpadm;
+            $jumlahtotal += $trans->total;
         }
 
         $row += 1;
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", 'Sub Total');
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $jumlah);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", 'Sub Total');
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("G{$row}", $jumlahpelanggan);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("H{$row}", $jumlahlembar);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("I{$row}", $jumlahrptag);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("J{$row}", $jumlahrpadm);
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("K{$row}", $jumlahtotal);
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -189,7 +201,7 @@ class AccountingController extends Controller
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", Cid::where('kode_cid', $transaction->cid_id)->first()->nama_cid);
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", Produk::where('kode_produk', $transaction->produk_id)->first()->nama_produk);
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $transaction->lembar);
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", "Rp. " . number_format($transaction->tagihan));
+            // $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", "Rp. " . number_format($transaction->tagihan));
             $row++;
             $jumlahLembar += $transaction->lembar;
             $jumlahFee += $transaction->tagihan;
@@ -198,7 +210,7 @@ class AccountingController extends Controller
         $row += 1;
         $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", 'Sub Total');
         $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $jumlahLembar);
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", $jumlahFee);
+        // $spreadsheet->setActiveSheetIndex(0)->setCellValue("F{$row}", $jumlahFee);
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -219,7 +231,7 @@ class AccountingController extends Controller
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("B{$row}", "{$transaction->tanggal}");
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", Cid::where('kode_cid', $transaction->cid_id)->first()->nama_cid);
             $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $transaction->lembar);
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", "Rp. " . number_format($transaction->tagihan));
+            // $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", "Rp. " . number_format($transaction->tagihan));
             $row++;
             $jumlahLembar += $transaction->lembar;
             $jumlahFee += $transaction->tagihan;
@@ -228,7 +240,7 @@ class AccountingController extends Controller
         $row += 1;
         $spreadsheet->setActiveSheetIndex(0)->setCellValue("C{$row}", 'Sub Total');
         $spreadsheet->setActiveSheetIndex(0)->setCellValue("D{$row}", $jumlahLembar);
-        $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $jumlahFee);
+        // $spreadsheet->setActiveSheetIndex(0)->setCellValue("E{$row}", $jumlahFee);
 
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');

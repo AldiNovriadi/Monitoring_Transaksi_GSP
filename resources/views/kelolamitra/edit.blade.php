@@ -41,8 +41,8 @@
                                             <option value="{{ $banks->id }}" {{$banks->id == $mitra->bank_id ? 'selected' : ''}}> {{ $banks->nama_bank }} </option>
                                         @endforeach
                                     </select> </br>
-                                    <span class="text-secondary">File Template Excel <b>(<span> Template Saat ini : @if(empty($mitra->filetemplate)) Belum Ada @else <a href="{{asset('/excelTemplate/'.$mitra->filetemplate)}}">{{$mitra->filetemplate}}</a> @endif )</b></span>
-                                    <input class="form-control" name="filtetemplate" type="file" id="formFile"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" > </br>
+                                    {{-- <span class="text-secondary">File Template Excel <b>(<span> Template Saat ini : @if(empty($mitra->filetemplate)) Belum Ada @else <a href="{{asset('/excelTemplate/'.$mitra->filetemplate)}}">{{$mitra->filetemplate}}</a> @endif )</b></span>
+                                    <input class="form-control" name="filtetemplate" type="file" id="formFile"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" > </br> --}}
                                     
                                 </div>
                             </div>
